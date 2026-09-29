@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>紫微玄历｜道教神仙圣诞与斋期日历</title>
+<style>
+:root{
+  --paper:#f4f0e6;--paper-2:#ebe4d5;--ink:#18211f;--muted:#69716c;
+  --indigo:#17243d;--indigo-2:#243659;--cinnabar:#9f332b;--gold:#9b7a3b;
+  --line:rgba(24,33,31,.14);--line-dark:rgba(244,240,230,.16);
+  --shadow:0 20px 60px rgba(19,27,39,.16);--radius:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#d9d3c7;color:var(--ink);font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC",serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.app{min-height:100vh;background:var(--paper);position:relative;overflow:hidden}
+.app:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:radial-gradient(circle at 20% 15%,rgba(155,122,59,.18),transparent 28%),radial-gradient(circle at 82% 2%,rgba(23,36,61,.15),transparent 33%),repeating-linear-gradient(90deg,rgba(22,31,29,.018) 0 1px,transparent 1px 5px)}
+.star-map{position:fixed;right:-80px;top:-80px;width:520px;height:520px;opacity:.16;pointer-events:none}
+.topbar{height:82px;background:var(--indigo);color:var(--paper);display:flex;align-items:center;padding:0 28px;gap:26px;position:relative;z-index:5;border-bottom:1px solid rgba(255,255,255,.12)}
+.brand{display:flex;align-items:center;gap:14px;min-width:285px}
+.brand-seal{width:42px;height:42px;border:1px solid rgba(244,240,230,.68);display:grid;place-items:center;color:#e8d6ac;font-size:13px;line-height:1.05;letter-spacing:2px;box-shadow:inset 0 0 0 4px rgba(255,255,255,.04)}
+.brand h1{font-size:20px;letter-spacing:.18em;margin:0;font-weight:600}.brand small{display:block;color:rgba(244,240,230,.58);font-size:11px;letter-spacing:.12em;margin-top:5px}
+.search-wrap{flex:1;max-width:680px;position:relative}.search-wrap input{width:100%;height:44px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff;padding:0 44px 0 16px;outline:none;border-radius:2px}.search-wrap input::placeholder{color:rgba(255,255,255,.48)}
+.search-icon{position:absolute;right:15px;top:12px;color:rgba(255,255,255,.58)}
+.search-results{position:absolute;top:52px;left:0;right:0;background:#fff;color:var(--ink);box-shadow:var(--shadow);max-height:420px;overflow:auto;border:1px solid var(--line);z-index:20}
+.search-item{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px}.search-item:hover{background:#f6f1e7}.search-item b{font-size:14px}.search-item small{color:var(--muted)}
+.top-actions{display:flex;align-items:center;gap:8px;margin-left:auto}.top-actions button{height:38px;border:1px solid rgba(255,255,255,.18);background:transparent;color:#fff;padding:0 13px}.top-actions button.active{background:#e9ddc4;color:var(--indigo)}
+.shell{display:grid;grid-template-columns:240px minmax(680px,1fr) 320px;min-height:calc(100vh - 82px);position:relative;z-index:2}
+.sidebar{border-right:1px solid var(--line);padding:24px 18px;background:rgba(239,233,220,.72);overflow:auto}.sidebar h2,.detail h2{font-size:12px;letter-spacing:.22em;color:var(--muted);font-weight:600;margin:0 0 16px}.filter-list{display:grid;gap:7px}.filter{display:flex;align-items:center;gap:10px;padding:9px 8px;border:1px solid transparent;cursor:pointer;font-size:13px}.filter:hover{border-color:var(--line)}.filter input{accent-color:var(--cinnabar)}.dot{width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.sidebar-divider{height:1px;background:var(--line);margin:24px 0}.mini-note{font-size:12px;color:var(--muted);line-height:1.8}.legend{display:grid;gap:9px;font-size:12px}.legend-row{display:flex;gap:9px;align-items:center}.legend-mark{width:25px;height:4px;background:var(--cinnabar)}
+.main{padding:24px 28px 38px;min-width:0}.calendar-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;gap:20px}.year-block{display:flex;align-items:center;gap:14px}.year-block button{width:38px;height:38px;border:1px solid var(--line);background:transparent}.year-title{min-width:240px}.year-title h2{font-size:34px;line-height:1;margin:0;font-weight:500;letter-spacing:.06em}.year-title p{margin:8px 0 0;color:var(--muted);font-size:13px;letter-spacing:.08em}.month-switch{display:flex;gap:7px;align-items:center}.month-switch select{height:38px;background:transparent;border:1px solid var(--line);padding:0 12px;color:var(--ink)}
+.today-btn{height:38px;border:1px solid var(--cinnabar);background:transparent;color:var(--cinnabar);padding:0 14px}.calendar-card{background:rgba(255,255,255,.46);border:1px solid var(--line);box-shadow:0 10px 35px rgba(35,35,30,.06)}
+.weekdays,.grid{display:grid;grid-template-columns:repeat(7,1fr)}.weekdays{border-bottom:1px solid var(--line);background:rgba(235,228,213,.52)}.weekday{padding:13px 12px;color:var(--muted);font-size:12px;letter-spacing:.16em}.day{min-height:122px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 10px 8px;position:relative;transition:.16s;background:rgba(255,255,255,.05)}.day:nth-child(7n){border-right:0}.day:hover{background:#fff;z-index:2;box-shadow:0 7px 24px rgba(28,35,45,.11)}.day.outside{opacity:.36}.day.selected{outline:2px solid var(--cinnabar);outline-offset:-2px;background:#fff}.day.today:after{content:"今";position:absolute;right:8px;top:8px;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;background:var(--cinnabar);color:#fff;font-size:11px}.day-num{font-family:Georgia,serif;font-size:22px}.lunar{font-size:11px;color:var(--muted);margin-top:3px}.events{display:grid;gap:4px;margin-top:9px}.event-chip{font-family:system-ui,sans-serif;font-size:10.5px;line-height:1.3;padding:3px 5px;border-left:2px solid var(--gold);background:rgba(155,122,59,.08);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.event-chip.birthday{border-color:var(--cinnabar);background:rgba(159,51,43,.07)}.event-chip.attainment{border-color:#526d68;background:rgba(82,109,104,.08)}.event-chip.bahui,.event-chip.bajie{border-color:#586a91;background:rgba(88,106,145,.08)}.event-chip.wuri{border-color:#84664d;background:rgba(132,102,77,.08)}.more{font-size:10px;color:var(--cinnabar);margin-top:2px}
+.detail{border-left:1px solid var(--line);background:rgba(249,246,239,.9);padding:24px 22px;overflow:auto}.date-hero{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:18px}.date-big{font-size:46px;line-height:1;font-family:Georgia,serif}.date-meta{margin-top:9px;color:var(--muted);font-size:13px;line-height:1.8}.event-detail{padding:14px 0;border-bottom:1px solid var(--line)}.event-detail .cat{font-family:system-ui,sans-serif;font-size:10px;letter-spacing:.1em;color:var(--cinnabar)}.event-detail h3{margin:6px 0;font-size:16px;font-weight:600}.event-detail p{margin:0;color:var(--muted);font-size:12px;line-height:1.7}.deity-link{margin-top:8px;background:none;border:0;color:var(--indigo-2);padding:0;border-bottom:1px solid currentColor;font-size:12px}.empty{color:var(--muted);font-size:13px;line-height:1.8;padding:15px 0}
+.graph-view{display:none}.graph-view.active{display:block}.calendar-view.hidden-view{display:none}.graph-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px}.graph-header h2{font-size:30px;margin:0}.graph-header p{color:var(--muted);max-width:620px;line-height:1.7}.graph-stage{position:relative;min-height:650px;background:var(--indigo);border:1px solid rgba(0,0,0,.1);overflow:hidden;color:#fff;box-shadow:var(--shadow)}.graph-stage:before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 50% 45%,rgba(232,214,172,.16),transparent 28%),radial-gradient(circle,#fff 0 1px,transparent 1.5px);background-size:auto,48px 48px;opacity:.3}.orbit{position:absolute;border:1px solid rgba(232,214,172,.18);border-radius:50%;left:50%;top:48%;transform:translate(-50%,-50%)}.orbit.one{width:280px;height:280px}.orbit.two{width:510px;height:510px}.node{position:absolute;transform:translate(-50%,-50%);min-width:118px;max-width:155px;text-align:center;padding:12px 10px;border:1px solid rgba(232,214,172,.48);background:rgba(23,36,61,.88);color:#f4f0e6;box-shadow:0 8px 25px rgba(0,0,0,.22)}.node:hover{background:#2d4169}.node.center{left:50%;top:48%;padding:22px 18px;min-width:170px;border-color:#e8d6ac}.node b{display:block;font-size:14px}.node small{display:block;margin-top:5px;color:rgba(244,240,230,.6);font-size:10px}.n1{left:30%;top:26%}.n2{left:70%;top:26%}.n3{left:73%;top:65%}.n4{left:27%;top:65%}.n5{left:50%;top:11%}.n6{left:88%;top:47%}.n7{left:75%;top:87%}.n8{left:25%;top:87%}.n9{left:12%;top:47%}
+.modal{position:fixed;inset:0;background:rgba(9,14,22,.72);z-index:50;display:flex;justify-content:flex-end}.modal-panel{width:min(720px,92vw);height:100%;background:var(--paper);overflow:auto;box-shadow:-20px 0 60px rgba(0,0,0,.28);padding:30px 34px}.modal-top{display:flex;justify-content:space-between;gap:20px}.modal-close{width:40px;height:40px;border:1px solid var(--line);background:transparent}.deity-kicker{font-size:11px;letter-spacing:.18em;color:var(--cinnabar)}.deity-title{font-size:34px;margin:8px 0 5px;font-weight:500}.deity-full{color:var(--muted);font-size:13px}.tags{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 24px}.tag{font-family:system-ui,sans-serif;border:1px solid var(--line);padding:5px 8px;font-size:11px}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.profile-section{border-top:1px solid var(--line);padding-top:14px}.profile-section.wide{grid-column:1/-1}.profile-section h3{font-size:12px;letter-spacing:.16em;color:var(--muted);margin:0 0 10px}.profile-section p,.profile-section li{font-size:14px;line-height:1.85}.quote{font-size:18px!important;color:var(--indigo);border-left:3px solid var(--cinnabar);padding-left:16px}.source-note{font-size:11px!important;color:var(--muted)}
+.footer-note{margin-top:16px;color:var(--muted);font-size:11px;line-height:1.7}.status{position:fixed;left:260px;bottom:18px;background:var(--indigo);color:#fff;padding:9px 13px;font:12px system-ui,sans-serif;z-index:30;box-shadow:var(--shadow)}
+.today-view{max-width:1000px;margin:auto}.today-view.hidden-view{display:none}.today-heading{padding:18px 0 25px;border-bottom:1px solid var(--line)}.today-eyebrow{font:12px system-ui,sans-serif;letter-spacing:.2em;color:var(--cinnabar)}.today-heading h2{font-size:clamp(32px,5vw,58px);font-weight:500;margin:10px 0}.today-meta{color:var(--muted);line-height:1.8}.today-card{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:30px;margin:25px 0;background:#fcfaf5;border:1px solid var(--line);box-shadow:var(--shadow);padding:clamp(22px,4vw,46px)}.today-card h3{font-size:clamp(28px,4vw,44px);font-weight:500;margin:10px 0}.today-event-name{color:var(--cinnabar);font-size:14px}.today-intro{line-height:1.9;color:#454c49}.today-image{min-height:270px;border:1px solid rgba(155,122,59,.45);background:radial-gradient(circle at 50% 35%,rgba(232,214,172,.45),transparent 45%),linear-gradient(155deg,#182640,#2d4061);display:grid;place-items:center;color:#e8d6ac;letter-spacing:.2em;text-align:center;font-size:13px;line-height:2}.today-baogao{margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}.today-baogao h4,.today-list h3{font-size:14px;letter-spacing:.13em;margin:0 0 12px}.today-baogao p{line-height:1.9;margin:0;color:var(--muted)}.today-baogao .verified-text{font-size:19px;color:var(--indigo);white-space:pre-line}.today-baogao small{display:block;margin-top:10px;color:var(--muted)}.today-list{margin:28px 0}.today-list-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px}.today-other{width:100%;text-align:left;padding:15px 17px;border:1px solid var(--line);background:rgba(255,255,255,.58);color:var(--ink)}.today-other:hover,.today-other:focus-visible{border-color:var(--cinnabar);background:#fff}.today-other small{display:block;color:var(--muted);margin-top:6px}.today-actions{display:flex;gap:10px;flex-wrap:wrap}.today-actions button{border:1px solid var(--cinnabar);background:transparent;color:var(--cinnabar);padding:10px 16px}.today-actions button:hover{background:var(--cinnabar);color:#fff}.today-note{color:var(--muted);font-size:12px;line-height:1.8}
+@media(max-width:1180px){.shell{grid-template-columns:210px 1fr}.detail{grid-column:2;border-top:1px solid var(--line)}.brand{min-width:240px}.top-actions button span{display:none}}
+@media(max-width:820px){.topbar{height:auto;min-height:78px;flex-wrap:wrap;padding:14px 16px}.brand{min-width:auto}.search-wrap{order:3;flex-basis:100%}.shell{display:block}.sidebar{display:none}.main{padding:18px 12px}.detail{display:block}.calendar-head{align-items:flex-start;flex-direction:column}.day{min-height:92px;padding:7px 5px}.event-chip{font-size:9px}.year-title h2{font-size:28px}.profile-grid{grid-template-columns:1fr}.graph-stage{min-height:760px}.node{min-width:100px}.status{left:12px}.today-card{grid-template-columns:1fr}.today-image{min-height:110px}.today-heading{padding-top:8px}}
+</style>
+</head>
+<body>
+<div class="app">
+<svg class="star-map" viewBox="0 0 500 500" aria-hidden="true"><g fill="none" stroke="#d8c28d" stroke-width="1"><circle cx="250" cy="250" r="180"/><circle cx="250" cy="250" r="120"/><path d="M90 220L178 148L246 194L330 120L390 238L315 330L222 290L140 370"/><path d="M250 70V430M70 250H430"/></g><g fill="#d8c28d"><circle cx="90" cy="220" r="4"/><circle cx="178" cy="148" r="5"/><circle cx="246" cy="194" r="4"/><circle cx="330" cy="120" r="6"/><circle cx="390" cy="238" r="4"/><circle cx="315" cy="330" r="5"/><circle cx="222" cy="290" r="4"/><circle cx="140" cy="370" r="5"/></g></svg>
+<header class="topbar">
+  <div class="brand"><div class="brand-seal">紫微<br>玄历</div><div><h1>紫微玄历</h1><small>道教神仙圣诞与斋期日历</small></div></div>
+  <div class="search-wrap"><input id="searchInput" placeholder="搜索神仙、神号、别名或节日，如：紫微大帝、毕月乌" autocomplete="off"><span class="search-icon">⌕</span><div id="searchResults" class="search-results hidden"></div></div>
+  <div class="top-actions"><button id="todayTab" class="active">今日</button><button id="calendarTab">月历</button><button id="graphTab">紫微神系</button></div>
+</header>
+<div class="shell">
+<aside class="sidebar">
+  <h2>事件分类</h2><div id="filters" class="filter-list"></div>
+  <div class="sidebar-divider"></div>
+  <h2>阅读提示</h2>
+  <div class="legend"><div class="legend-row"><span class="legend-mark"></span>重点神仙圣诞</div><div class="legend-row"><span class="legend-mark" style="background:#586a91"></span>八会、八节</div><div class="legend-row"><span class="legend-mark" style="background:#84664d"></span>明戊、暗戊</div></div>
+  <div class="sidebar-divider"></div>
+  <p class="mini-note">节日名称与固定农历日期按用户提供历例录入；神仙资料采用经典名目、道教文化机构与文物机构公开资料作科普整理。不同道派的神号、编制与科仪可能存在差异。</p>
+</aside>
+<main class="main">
+  <section id="todayView" class="today-view" aria-label="今日圣诞">
+    <div class="today-heading"><div class="today-eyebrow">今日道历 · TODAY</div><h2 id="todayTitle"></h2><div id="todayMeta" class="today-meta"></div></div>
+    <div id="todayContent"></div>
+  </section>
+  <section id="calendarView" class="calendar-view hidden-view">
+    <div class="calendar-head">
+      <div class="year-block"><button id="prevMonth" aria-label="上个月">‹</button><div class="year-title"><h2 id="monthTitle"></h2><p id="yearSubtitle"></p></div><button id="nextMonth" aria-label="下个月">›</button></div>
+      <div class="month-switch"><select id="yearSelect" aria-label="年份"></select><select id="monthSelect" aria-label="月份"></select><button class="today-btn" id="todayBtn">返回今天</button></div>
+    </div>
+    <div class="calendar-card"><div class="weekdays"><div class="weekday">日</div><div class="weekday">一</div><div class="weekday">二</div><div class="weekday">三</div><div class="weekday">四</div><div class="weekday">五</div><div class="weekday">六</div></div><div id="calendarGrid" class="grid"></div></div>
+    <div class="footer-note">离线原型 · 年份范围 1900—2100 · 农历换算使用浏览器内置 Chinese Calendar（Intl）· 八会、明暗戊、八节与天赦按内置规则生成。</div>
+  </section>
+  <section id="graphView" class="graph-view">
+    <div class="graph-header"><div><h2>紫微神系图谱</h2><p>以中天紫微北极大帝为中心，区分四御同列、北极四圣部属、斗宿母神与二十八宿星官。关系图是科普导航，不把不同经典和道派中的差异强行合并。</p></div></div>
+    <div class="graph-stage">
+      <div class="orbit one"></div><div class="orbit two"></div>
+      <button class="node center" data-deity="ziwei"><b>中天紫微北极大帝</b><small>万星之宗 · 北极中枢</small></button>
+      <button class="node n1" data-deity="gouchen"><b>勾陈大帝</b><small>四御同列</small></button>
+      <button class="node n2" data-deity="nanji"><b>南极长生大帝</b><small>四御同列</small></button>
+      <button class="node n3" data-deity="yuhuang"><b>玉皇上帝</b><small>高阶天帝体系</small></button>
+      <button class="node n4" data-deity="doumu"><b>斗姥元君</b><small>北斗母神</small></button>
+      <button class="node n5" data-deity="tianpeng"><b>天蓬元帅</b><small>北极四圣</small></button>
+      <button class="node n6" data-deity="tianyou"><b>天猷副元帅</b><small>北极四圣</small></button>
+      <button class="node n7" data-deity="yisheng"><b>翊圣保德真君</b><small>北极四圣</small></button>
+      <button class="node n8" data-deity="zhenwu"><b>佑圣真武大帝</b><small>北极四圣</small></button>
+      <button class="node n9" data-deity="biyuewu"><b>毕月乌</b><small>西方白虎七宿</small></button>
+    </div>
+  </section>
+</main>
+<aside class="detail"><h2>日期释读</h2><div id="detailPanel"></div></aside>
+</div>
+</div>
+<div id="deityModal" class="modal hidden"><div class="modal-panel"><div class="modal-top"><div><div class="deity-kicker">神仙资料库</div><h2 id="deityTitle" class="deity-title"></h2><div id="deityFull" class="deity-full"></div></div><button id="modalClose" class="modal-close">×</button></div><div id="deityBody"></div></div></div>
+<div id="status" class="status hidden"></div>
+<script>
+'use strict';
+const CAT={birthday:'神仙圣诞',attainment:'成道、飞升、降生、下降',sanyuan:'三元日',wula:'五腊日',bahui:'八会日',bajie:'八节日',wuri:'明戊日、暗戊日',tianshe:'天赦日',descent:'神仙巡天、星君下降',other:'其他纪念日'};
+const catOrder=Object.keys(CAT);
+const fixed=[];
+function add(m,d,name,cat='birthday',deity=null,note=''){fixed.push({m,d,name,cat,deity,note})}
+// 正月
+add(1,1,'五腊日','wula');add(1,1,'天腊之辰','wula');add(1,3,'郝真人圣诞');add(1,3,'孙真人圣诞');add(1,5,'孙祖清静元君诞');add(1,7,'三会日','other');add(1,7,'举迁赏会','other');add(1,9,'玉皇上帝圣诞','birthday','yuhuang');add(1,13,'关圣帝君飞升','attainment');add(1,15,'三元日','sanyuan');add(1,15,'上元天官圣诞');add(1,15,'老祖天师圣诞');add(1,19,'长春邱真人（邱处机）圣诞');add(1,28,'许真君（许逊天师）圣诞');
+// 二月
+add(2,1,'勾陈天皇大帝圣诞','birthday','gouchen');add(2,1,'长春刘真人（刘渊然）圣诞');add(2,2,'土地正神诞');add(2,2,'姜太公圣诞');add(2,3,'文昌梓潼帝君圣诞');add(2,6,'东华帝君圣诞');add(2,13,'度人无量葛真君圣诞');add(2,15,'太清道德天尊（太上老君）圣诞');add(2,19,'慈航真人圣诞');
+// 三月
+add(3,1,'谭祖（谭处端）长真真人圣诞');add(3,3,'玄天上帝圣诞','birthday','zhenwu');add(3,6,'眼光娘娘圣诞');add(3,15,'天师张大真人圣诞');add(3,15,'财神赵公元帅圣诞');add(3,16,'三茅真君得道之辰','attainment');add(3,16,'中岳大帝圣诞');add(3,18,'王祖（王处一）玉阳真人圣诞');add(3,18,'后土娘娘圣诞');add(3,19,'太阳星君圣诞');add(3,20,'子孙娘娘圣诞');add(3,23,'天后妈祖圣诞');add(3,26,'鬼谷先师诞');add(3,28,'东岳大帝圣诞');
+// 四月
+add(4,1,'长生谭真君成道之辰','attainment');add(4,10,'何仙姑圣诞');add(4,14,'吕祖纯阳祖师圣诞');add(4,15,'钟离祖师圣诞');add(4,18,'北极紫微大帝圣诞','birthday','ziwei');add(4,18,'泰山圣母碧霞元君诞');add(4,18,'华佗神医先师诞');add(4,20,'眼光圣母娘娘诞');add(4,28,'神农先帝诞');
+// 五月
+add(5,1,'南极长生大帝圣诞','birthday','nanji');add(5,5,'五腊日','wula');add(5,5,'地腊之辰','wula');add(5,5,'南方雷祖圣诞');add(5,5,'地祗温元帅圣诞');add(5,5,'雷霆邓天君圣诞');add(5,7,'灵宝天尊圣诞');add(5,11,'城隍爷圣诞');add(5,13,'关圣帝君降神','attainment');add(5,13,'关平太子圣诞');add(5,18,'张天师圣诞');add(5,20,'马祖丹阳真人圣诞');add(5,29,'紫青白祖师圣诞');
+// 六月
+for(let d=1;d<=6;d++)add(6,d,'南斗星君下降','descent');add(6,10,'刘海蟾祖师圣诞');add(6,15,'灵官王天君圣诞');add(6,19,'慈航（观音）成道日','attainment');add(6,23,'火神圣诞');add(6,24,'南极大帝中方雷祖圣诞');add(6,24,'关圣帝君圣诞');add(6,26,'二郎真君圣诞');
+// 七月
+add(7,7,'三会日','other');add(7,7,'五腊日','wula');add(7,7,'道德腊之辰','wula');add(7,7,'庆生中会','other');add(7,15,'三元日','sanyuan');add(7,15,'中元地官大帝圣诞');add(7,18,'王母娘娘圣诞');add(7,20,'刘祖（刘处玄）长生真人圣诞');add(7,22,'财帛星君文财神增福相公李诡祖圣诞');add(7,26,'张三丰祖师圣诞');
+// 八月
+add(8,1,'许真君飞升日','attainment');add(8,3,'九天司命灶君诞');add(8,5,'北方雷祖圣诞');add(8,10,'北岳大帝诞辰');add(8,15,'太阴星君诞');
+// 九月
+for(let d=1;d<=9;d++)add(9,d,'北斗九皇降世之辰','descent');add(9,9,'斗姥元君圣诞','birthday','doumu');add(9,9,'重阳帝君圣诞');add(9,9,'玄天上帝飞升','attainment','zhenwu');add(9,9,'酆都大帝圣诞');add(9,22,'增福财神诞');add(9,23,'萨翁真君圣诞');add(9,28,'五显灵官马元帅圣诞');
+// 十月
+add(10,1,'五腊日','wula');add(10,1,'民岁腊之辰','wula');add(10,1,'东皇大帝圣诞');add(10,3,'三茅应化真君圣诞');add(10,6,'天曹诸司五岳五帝圣诞');add(10,15,'三会日','other');add(10,15,'三元日','sanyuan');add(10,15,'下元水官大帝圣诞');add(10,15,'建生大会','other');add(10,18,'地母娘娘圣诞');add(10,19,'长春邱真君飞升','attainment');add(10,20,'虚靖天师（第三十代天师弘悟张真人）诞');
+// 十一月、腊月
+add(11,6,'西岳大帝圣诞');add(11,9,'湘子韩祖圣诞');add(11,11,'太乙救苦天尊圣诞');add(11,26,'北方五道圣诞');add(12,8,'五腊日','wula');add(12,8,'王侯腊之辰','wula');add(12,16,'南岳大帝圣诞');add(12,16,'福德正神诞');add(12,20,'鲁班先师圣诞');add(12,21,'天猷上帝圣诞','birthday','tianyou');add(12,22,'重阳祖师圣诞');add(12,23,'祭灶王','other');add(12,25,'玉帝巡天','descent','yuhuang');add(12,25,'天神下降','descent');add(12,29,'清静孙真君（孙不二）成道','attainment');
+
+const deities={
+ziwei:{name:'中天紫微北极大帝',full:'中天紫微北极太皇大帝',aliases:['紫微大帝','北极大帝','紫微北极大帝','北极太皇大帝'],system:'四御、北极与星辰神系',types:['万星之宗','北极中枢','四御'],intro:'道教高阶天帝之一，以北极、紫微垣为象征中心，统摄星辰与天曹秩序。在不同经典、科仪和时代图像中，神号与职掌表述略有差异。永乐宫《朝元图》将其列入八位核心帝后。',baogao:'“大罗天阙，紫微星宫；尊居北极之高，位正中天之上。”',baogaoSource:'《中天紫微北极太皇大帝宝诰》（节选）',classics:['《中天紫微北极太皇大帝宝诰》','《云笈七签》星斗、北极相关材料','永乐宫三清殿《朝元图》图像体系'],temples:['山西芮城永乐宫（三清殿《朝元图》）','山西介休后土庙（三清观万圣朝元彩塑）'],relations:['与勾陈大帝、南极长生大帝等同见于四御或六御体系','北极四圣常被表述为北极紫微系统的护法神将','与北斗、南斗、二十八宿共同构成星辰神系'],dates:['农历四月十八：北极紫微大帝圣诞（按本历例）']},
+doumu:{name:'斗姥元君',full:'先天斗姥紫光金尊摩利支天大圣圆明道姥天尊',aliases:['斗姆元君','斗母元君','紫光夫人','道姥天尊'],system:'北斗、星辰母神体系',types:['北斗母神','星辰神系'],intro:'斗姥元君是道教星斗信仰中的重要女神，常被尊为北斗众星之母。相关神号与形象在道教经典、科仪和民间信仰中有多种层次，科普展示应避免将不同传统简单等同。',baogao:'“西天竺国，大智光中；真空妙相法王师，无上玄元天母主。”',baogaoSource:'《斗姥元君宝诰》（节选）',classics:['《斗姥元君宝诰》','北斗本命延生、朝斗类科仪文献','永乐宫《朝元图》星斗图像体系'],temples:['北京白云观元辰殿','山西芮城永乐宫（三清殿《朝元图》）'],relations:['与北斗九皇、北斗七元信仰关系密切','在星斗神系中与紫微、北斗信仰相互关联，但并非紫微大帝的别称'],dates:['农历九月初九：斗姥元君圣诞（按本历例）']},
+gouchen:{name:'勾陈上宫天皇大帝',full:'勾陈上宫天皇大帝',aliases:['勾陈大帝','天皇大帝'],system:'四御、天极神系',types:['四御','天皇'],intro:'勾陈大帝是道教高阶天帝之一，名称取自天极附近的勾陈星官。常见职掌表述涉及辅佐天道、统御众灵及兵革等，但不同文献系统的表述不完全一致。',baogao:'已收录宝诰名称；正文需依据正式科本逐字校勘，首版暂不展示。',baogaoSource:'勾陈大帝宝诰（待校勘）',classics:['勾陈、天皇大帝相关宝诰与科仪','永乐宫三清殿《朝元图》'],temples:['山西芮城永乐宫（三清殿《朝元图》）'],relations:['与紫微大帝同列四御体系','神名源于古代星官勾陈，与北极天区象征相关'],dates:['农历二月初一：勾陈天皇大帝圣诞（按本历例）']},
+nanji:{name:'南极长生大帝',full:'高上神霄玉清真王长生大帝统天元圣天尊',aliases:['长生大帝','南极大帝'],system:'四御、神霄体系',types:['四御','长生','神霄'],intro:'南极长生大帝是道教高阶天帝之一，常与长生、寿命、雷霆神霄体系相联系。不可与民间寿星形象简单画等号，二者在称谓与图像传播中虽有交汇，但神格体系并不完全相同。',baogao:'“高上神霄府，凝神焕照宫；会元始祖炁以分真，应妙道虚无而开化。”',baogaoSource:'《南极长生大帝宝诰》（节选）',classics:['《南极长生大帝宝诰》','神霄雷法相关文献','永乐宫三清殿《朝元图》'],temples:['山西芮城永乐宫（三清殿《朝元图》）'],relations:['与紫微、勾陈等同见于四御或六御体系','与南极星、长生信仰及神霄雷法存在多重关联'],dates:['农历五月初一：南极长生大帝圣诞（按本历例）']},
+yuhuang:{name:'玉皇上帝',full:'太上开天执符御历含真体道昊天玉皇上帝',aliases:['玉皇大帝','昊天玉皇上帝','玉帝'],system:'高阶天帝、天曹体系',types:['天帝','天曹主宰'],intro:'玉皇上帝是道教最具公众知名度的天帝之一，常被视为天曹秩序与众神班列的最高主持者。四御、六御及不同科仪中的排列方式并不完全一致，因此本页不将玉皇与紫微简化为单一固定的上下级关系。',baogao:'已收录《玉皇宝诰》名目；正文需依据正式科本逐字校勘，首版暂不展示。',baogaoSource:'《玉皇宝诰》（待校勘）',classics:['《高上玉皇本行集经》','《玉皇宝诰》','永乐宫三清殿《朝元图》'],temples:['山西晋城府城玉皇庙','山西芮城永乐宫（三清殿《朝元图》）'],relations:['与紫微、勾陈、南极长生等共同出现于大型朝元神系','府城玉皇庙以玉皇信仰为核心，并保存二十八宿彩塑'],dates:['农历正月初九：玉皇上帝圣诞','农历腊月二十五：玉帝巡天（按本历例）']},
+tianpeng:{name:'天蓬元帅',full:'北极天蓬大元帅',aliases:['天蓬真君','天蓬大元帅','天蓬神将'],system:'北极四圣、护法神将',types:['北极四圣','护法','雷法'],intro:'天蓬元帅为北极四圣之首，是道教重要护法神将，经典形象以威猛、驱邪、统兵为核心。应与小说《西游记》中猪八戒的文学形象区分。',baogao:'首版不展示未经逐字校勘的宝诰正文，可先参《太上说天蓬神咒妙经》。',baogaoSource:'天蓬元帅宝诰、天蓬神咒（待校勘）',classics:['《太上说天蓬神咒妙经》','《道法会元》天蓬法相关卷次','北极四圣相关科仪'],temples:['山西芮城永乐宫《朝元图》北方四圣图像','各地真武、雷法宫观中的北极四圣配祀'],relations:['北极四圣之一，常列为紫微北极系统神将','与天猷、翊圣、佑圣并列'],dates:['本次用户历例未列独立圣诞日期']},
+tianyou:{name:'天猷副元帅',full:'北极天猷副元帅',aliases:['天猷上帝','天猷元帅','天猷副帅'],system:'北极四圣、护法神将',types:['北极四圣','护法'],intro:'天猷副元帅是北极四圣之一，在北极驱邪、酆都与护法神将体系中占有重要位置。永乐宫《朝元图》中可见北方四圣的威仪形象。',baogao:'已收录天猷副元帅宝诰名目；正文待依据正式科本逐字校勘。',baogaoSource:'天猷副元帅宝诰（待校勘）',classics:['北极四圣相关宝诰与科仪','《道法会元》相关神将法系','永乐宫《朝元图》'],temples:['山西芮城永乐宫（三清殿《朝元图》）','北极四圣配祀宫观'],relations:['北极四圣之一','与天蓬、翊圣、佑圣共同构成北极护法组合'],dates:['农历腊月二十一：天猷上帝圣诞（按本历例）']},
+yisheng:{name:'翊圣保德真君',full:'北极翊圣保德真君',aliases:['翊圣真君','翊圣黑煞将军','黑杀将军'],system:'北极四圣、护法神将',types:['北极四圣','护法'],intro:'翊圣保德真君是北极四圣之一，宋代以后在国家道教礼仪和护国神将信仰中影响显著。其“黑煞”称号在不同文献中写法有别。',baogao:'已收录翊圣保德真君宝诰名目；正文待依据正式科本逐字校勘。',baogaoSource:'翊圣保德真君宝诰（待校勘）',classics:['翊圣保德真君相关碑诰、科仪','北极四圣相关道法文献','永乐宫《朝元图》'],temples:['山西芮城永乐宫（三清殿《朝元图》）','北极四圣配祀宫观'],relations:['北极四圣之一','与真武信仰在宋元以后均受到国家礼制重视'],dates:['本次用户历例未列独立圣诞日期']},
+zhenwu:{name:'佑圣真武大帝',full:'北极镇天真武玄天上帝',aliases:['玄天上帝','真武大帝','玄武大帝','荡魔天尊','佑圣真君'],system:'北极四圣、玄武与真武信仰',types:['北极四圣','镇天','护国'],intro:'真武大帝由玄武星象与北方水神、护法神信仰发展而来，宋元明时期地位日益显著。常见形象为披发跣足、仗剑镇龟蛇。',baogao:'“混元六天，传法教主；修真悟道，济度群迷。”',baogaoSource:'《玄天上帝宝诰》（节选）',classics:['《元始天尊说北方真武妙经》','《玄天上帝启圣录》','真武宝诰与武当山宫观文献'],temples:['湖北武当山真武宫观群','山西晋城珏山真武观','山西柳林玉虚宫（真武信仰）'],relations:['北极四圣之一，后世常以“玄天上帝”独立形成庞大神系','与紫微北极系统相联，但并非紫微大帝的化身'],dates:['农历三月初三：玄天上帝圣诞','农历九月初九：玄天上帝飞升（按本历例）']},
+biyuewu:{name:'毕月乌',full:'西方白虎七宿之毕宿星君',aliases:['毕宿','毕星','毕月乌星君'],system:'二十八宿、西方白虎七宿',types:['二十八宿','星宿神'],intro:'毕月乌是二十八宿之一，属于西方白虎七宿。名称由星宿名“毕”、七曜属性“月”和配属动物“乌”组成。山西晋城府城玉皇庙保存元代二十八宿彩塑，是理解星宿人格化艺术的重要遗存。',baogao:'首版不收录独立宝诰，以免把后世科仪称赞误作通行定本。',baogaoSource:'可参二十八宿总诰、星宿科仪及地方宫观科本',classics:['二十八宿、星辰科仪相关道经','古代天文中的毕宿材料','府城玉皇庙二十八宿彩塑'],temples:['山西晋城府城玉皇庙（二十八宿殿）'],relations:['西方白虎七宿第五宿','与紫微大帝同属广义星辰神系，但层级与职掌不同'],dates:['本次用户历例未列独立圣诞日期']}
+};
+
+// 逐字核对中国道教协会《诸真宝诰》所载清代《重刊道藏辑要·张集·太上玄门早坛功课经》文本（2026-09-29）。
+// 原型里的其他节选不自动升级为已核对宝诰。
+const baogaoSourceUrl='https://taoist.org.cn/getDjzsById.do?id=1198';
+const baogaoSource='中国道教协会《诸真宝诰》；文字出处：清代《重刊道藏辑要·张集·太上玄门早坛功课经》';
+const verifiedBaogao={
+ yuhuang:{title:'弥罗宝诰',text:'志心皈命礼。太上弥罗无上天，妙有玄真境。渺渺紫金阙，太微玉清官。无极无上圣，廓落发光明。寂寂浩无宗，玄范总十方。湛寂真常道，恢漠大神通。玉皇大天尊，玄穹高上帝。',source:baogaoSource,url:baogaoSourceUrl},
+ gouchen:{title:'天皇宝诰',text:'志心皈命礼。紫微宸极，勾陈天宫。九光宝苑之中，五炁玄都之上。体元皇而佐司玄化，总两极而共理三才。主持兵革之权衡，广推大德；统御星辰之躔次，毋失常经。上象巍峨，真元恢漠。大悲大愿，大圣大慈。勾陈上宫，天皇大帝。',source:baogaoSource,url:baogaoSourceUrl},
+ ziwei:{title:'星主宝诰',text:'志心皈命礼。大罗天阙，紫微星宫。尊居北极之高，位正中天之上。佛号金轮炽盛，道称玉斗玄尊。璇玑玉衡齐七政，总天经地纬；日月星宿约四时，行黄道紫垣。万象宗师，诸天统御。大悲大愿，大圣大慈。万星教主，无极元皇。中天紫微，北极大帝。',source:baogaoSource,url:baogaoSourceUrl},
+ nanji:{title:'南极宝诰',text:'志心皈命礼。高上神宵府，凝神焕照宫。会元始祖炁以分真，应妙道虚无而开化。位乎九霄之上，统理诸天。总乎十极之中，宰制万化。宣金符而垂光济苦，施惠泽而覆育兆民。恩溥乾元，仁敷浩劫。大悲大愿，大圣大慈。玉清真王，南极长生大帝，统天元圣天尊。',source:baogaoSource,url:baogaoSourceUrl}
+};
+
+const stems='甲乙丙丁戊己庚辛壬癸', branches='子丑寅卯辰巳午未申酉戌亥';
+const lunarFmt=new Intl.DateTimeFormat('zh-CN-u-ca-chinese',{year:'numeric',month:'long',day:'numeric',timeZone:'Asia/Shanghai'});
+const monthMap={'正月':1,'二月':2,'三月':3,'四月':4,'五月':5,'六月':6,'七月':7,'八月':8,'九月':9,'十月':10,'十一月':11,'冬月':11,'腊月':12,'臘月':12};
+const dayNames=['','初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+function dateUTC(y,m,d){return new Date(Date.UTC(y,m-1,d,4,0,0))}
+function dateKey(dt){return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth()+1).padStart(2,'0')}-${String(dt.getUTCDate()).padStart(2,'0')}`}
+function parseLunar(dt){const parts=lunarFmt.formatToParts(dt);const mv=(parts.find(p=>p.type==='month')||{}).value||'';const leap=mv.includes('闰')||mv.includes('閏');const label=mv.replace(/[闰閏]/g,'');return {month:monthMap[label],monthLabel:mv,day:Number((parts.find(p=>p.type==='day')||{}).value),yearName:(parts.find(p=>p.type==='yearName')||{}).value||'',relatedYear:Number((parts.find(p=>p.type==='relatedYear')||{}).value),leap}}
+function jdn(y,m,d){const a=Math.floor((14-m)/12),y2=y+4800-a,m2=m+12*a-3;return d+Math.floor((153*m2+2)/5)+365*y2+Math.floor(y2/4)-Math.floor(y2/100)+Math.floor(y2/400)-32045}
+function dayGanzhi(dt){const i=(jdn(dt.getUTCFullYear(),dt.getUTCMonth()+1,dt.getUTCDate())+49)%60;return {text:stems[i%10]+branches[i%12],stem:stems[i%10],branch:branches[i%12],index:i}}
+const sTermInfo=[0,21208,42467,63836,85337,107014,128867,150921,173149,195551,218072,240693,263343,285989,308563,331033,353350,375494,397447,419210,440795,462224,483532,504758];
+function termDate(year,index){const ms=31556925974.7*(year-1900)+sTermInfo[index]*60000+Date.UTC(1900,0,6,2,5);const x=new Date(ms);return dateUTC(x.getUTCFullYear(),x.getUTCMonth()+1,x.getUTCDate())}
+const eightTerms=[
+ {i:2,name:'立春',desc:'东北方度仙上圣天尊同梵炁始青天君下降'},
+ {i:5,name:'春分',desc:'东方玉宝星上天尊同青帝九炁天君下降'},
+ {i:8,name:'立夏',desc:'东南方好生度命天尊同梵炁始丹天君下降'},
+ {i:11,name:'夏至',desc:'南方玄真万福天尊同赤帝三炁天君下降'},
+ {i:14,name:'立秋',desc:'西南方太灵虚皇天尊同梵炁始素天君下降'},
+ {i:17,name:'秋分',desc:'西方太妙至极天尊同白帝七炁天君下降'},
+ {i:20,name:'立冬',desc:'西北方无量太华天尊同梵炁始玄天君下降'},
+ {i:23,name:'冬至',desc:'北方玄上玉宸天尊同黑帝五炁天君下降'}
+];
+const bahuiMap={'丙午':'天会','壬午':'地会','壬子':'人会','庚午':'日会','庚申':'月会','辛酉':'星辰会','甲辰':'五行会','甲戌':'四时会'};
+const darkWuBranch={1:'未',2:'戌',3:'辰',4:'寅',5:'午',6:'子',7:'酉',8:'申',9:'巳',10:'亥',11:'卯',12:'丑'};
+function monthGanzhi(dt){const y=dt.getUTCFullYear(),k=dateKey(dt),lichun=termDate(y,2),xiaohan=termDate(y,0);let cycYear=y,mi;
+ if(k<dateKey(xiaohan)){cycYear=y-1;mi=10}else if(k<dateKey(lichun)){cycYear=y-1;mi=11}else{const jie=[2,4,6,8,10,12,14,16,18,20,22];mi=0;for(let n=0;n<jie.length;n++){if(k>=dateKey(termDate(y,jie[n])))mi=n;}}
+ const ys=(cycYear-4)%10,first=((ys%5)*2+2)%10,mb=['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'][mi];return stems[(first+mi)%10]+mb}
+function getEvents(dt){const lunar=parseLunar(dt),gz=dayGanzhi(dt),events=[];
+ if(!lunar.leap&&lunar.month){fixed.filter(e=>e.m===lunar.month&&e.d===lunar.day).forEach(e=>events.push({...e,source:'固定农历'}))}
+ if(gz.stem==='戊')events.push({name:'明戊日',cat:'wuri',note:'六戊日：日干为戊。',source:'干支规则'});
+ if(lunar.month&&darkWuBranch[lunar.month]===gz.branch)events.push({name:'暗戊日',cat:'wuri',note:`农历${lunar.month}月逢${gz.branch}日。`,source:'月支规则'});
+ if(bahuiMap[gz.text])events.push({name:`八会日 · ${bahuiMap[gz.text]}`,cat:'bahui',note:`${gz.text}日对应${bahuiMap[gz.text]}。`,source:'八会干支规则'});
+ const y=dt.getUTCFullYear(),key=dateKey(dt);for(const t of eightTerms){if(key===dateKey(termDate(y,t.i))){events.push({name:`八节日 · ${t.name}`,cat:'bajie',note:'八个重要节气节点之一。',source:'节气规则'});events.push({name:t.desc,cat:'descent',note:`${t.name}下降纪念。`,source:'用户历例'});if(t.i===23)events.push({name:'元始天尊圣诞',cat:'birthday',note:'按用户历例列于冬至八节日。',source:'用户历例'})}}
+ // 天赦：春戊寅、夏甲午、秋戊申、冬甲子；同一季节内凡遇对应干支均列。
+ const seasons=[{start:termDate(y,2),end:termDate(y,8),gz:'戊寅'},{start:termDate(y,8),end:termDate(y,14),gz:'甲午'},{start:termDate(y,14),end:termDate(y,20),gz:'戊申'},{start:termDate(y,20),end:termDate(y+1,2),gz:'甲子'}];
+ // 1月属于上一年冬季
+ seasons.push({start:termDate(y-1,20),end:termDate(y,2),gz:'甲子'});
+ if(seasons.some(s=>dt>=s.start&&dt<s.end&&gz.text===s.gz))events.push({name:'天赦日',cat:'tianshe',note:'春戊寅、夏甲午、秋戊申、冬甲子。',source:'干支与节令规则'});
+ return dedupe(events)
+}
+function dedupe(arr){const seen=new Set();return arr.filter(x=>{const k=x.name+'|'+x.cat;if(seen.has(k))return false;seen.add(k);return true})}
+function daoYear(y){return y+2696}
+function lunarText(l){return `${l.monthLabel}${dayNames[l.day]||l.day}`}
+function formatDateCN(dt){return `${dt.getUTCFullYear()}年${dt.getUTCMonth()+1}月${dt.getUTCDate()}日`}
+function categoryIntro(cat){return {birthday:'神真圣诞、帝君诞辰等纪念日。',attainment:'成道、飞升、降神或其他神圣历程纪念。',sanyuan:'上元、中元、下元三官大帝相关斋日。',wula:'道教五腊祭祀与斋戒日期。',bahui:'由特定干支日生成的八类会日。',bajie:'立春、春分、立夏、夏至、立秋、秋分、立冬、冬至。',wuri:'明戊为六戊日；暗戊按农历月与日支匹配。',tianshe:'按四季与特定干支生成的赦宥吉日。',descent:'巡天、下降、星君降世等纪念。',other:'三会、祭灶及其他道教纪念。'}[cat]||''}
+
+const state={year:new Date().getFullYear(),month:new Date().getMonth()+1,selected:null,todayIndex:0,filters:new Set(catOrder)};
+const $=s=>document.querySelector(s);
+function init(){
+ if(!Intl.DateTimeFormat.supportedLocalesOf(['zh-CN-u-ca-chinese']).length){showStatus('当前浏览器不支持内置农历历法，请使用最新版 Chrome、Edge、Firefox 或 Safari。',false)}
+ for(let y=1900;y<=2100;y++)$('#yearSelect').insertAdjacentHTML('beforeend',`<option value="${y}">${y}年</option>`);
+ for(let m=1;m<=12;m++)$('#monthSelect').insertAdjacentHTML('beforeend',`<option value="${m}">${m}月</option>`);
+ $('#filters').innerHTML=catOrder.map(c=>`<label class="filter"><input type="checkbox" value="${c}" checked><span class="dot"></span><span>${CAT[c]}</span></label>`).join('');
+ $('#filters').addEventListener('change',e=>{if(e.target.matches('input')){e.target.checked?state.filters.add(e.target.value):state.filters.delete(e.target.value);render()}});
+ $('#yearSelect').onchange=e=>{state.year=+e.target.value;render()};$('#monthSelect').onchange=e=>{state.month=+e.target.value;render()};
+ $('#prevMonth').onclick=()=>moveMonth(-1);$('#nextMonth').onclick=()=>moveMonth(1);$('#todayBtn').onclick=goToday;
+ $('#todayTab').onclick=()=>{state.todayIndex=0;renderToday();switchView('today')};$('#calendarTab').onclick=()=>switchView('calendar');$('#graphTab').onclick=()=>switchView('graph');
+ $('#modalClose').onclick=closeModal;$('#deityModal').onclick=e=>{if(e.target.id==='deityModal')closeModal()};
+ document.querySelectorAll('[data-deity]').forEach(b=>b.onclick=()=>openDeity(b.dataset.deity));
+ $('#searchInput').addEventListener('input',search);document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))$('#searchResults').classList.add('hidden')});
+ goToday();renderToday();switchView('today');
+}
+function moveMonth(delta){state.month+=delta;if(state.month<1){state.month=12;state.year--}if(state.month>12){state.month=1;state.year++}state.year=Math.max(1900,Math.min(2100,state.year));render()}
+function goToday(){const n=new Date(),y=n.getFullYear();state.year=Math.max(1900,Math.min(2100,y));state.month=n.getMonth()+1;state.selected=dateUTC(state.year,state.month,n.getDate());render()}
+function switchView(v){$('#todayView').classList.toggle('hidden-view',v!=='today');$('#calendarView').classList.toggle('hidden-view',v!=='calendar');$('.detail').classList.toggle('hidden',v!=='calendar');$('#graphView').classList.toggle('active',v==='graph');$('#todayTab').classList.toggle('active',v==='today');$('#calendarTab').classList.toggle('active',v==='calendar');$('#graphTab').classList.toggle('active',v==='graph')}
+function findNextBirthday(start){for(let offset=1;offset<=62;offset++){const dt=new Date(start);dt.setUTCDate(dt.getUTCDate()+offset);const names=getEvents(dt).filter(e=>e.cat==='birthday');if(names.length)return {date:dt,events:names}}return null}
+function renderToday(){
+ const now=new Date(),dt=dateUTC(now.getFullYear(),now.getMonth()+1,now.getDate()),l=parseLunar(dt),events=getEvents(dt),birthdays=events.filter(e=>e.cat==='birthday');
+ $('#todayTitle').textContent=formatDateCN(dt);
+ $('#todayMeta').textContent=`农历${lunarText(l)} · ${l.yearName}年｜道历 ${daoYear(dt.getUTCFullYear())} 年｜${dayGanzhi(dt).text}日`;
+ const host=$('#todayContent');
+ if(!birthdays.length){const next=findNextBirthday(dt);host.innerHTML=`<div class="today-card"><div><div class="today-eyebrow">今日圣诞</div><h3>今日暂无收录的神仙圣诞</h3><p class="today-intro">${next?`下一次已收录圣诞：${escapeHtml(formatDateCN(next.date))} · ${escapeHtml(next.events.map(e=>e.name).join('、'))}`:'可在月历中查看其他日期的神仙圣诞。'}</p></div><div class="today-image" aria-hidden="true">紫微玄历</div></div>${renderOtherEvents(events)}<div class="today-actions"><button id="openCalendarFromToday">浏览月历</button></div>`}
+ else{const ranked=birthdays.map((e,i)=>({e,i})).sort((a,b)=>Number(Boolean(verifiedBaogao[b.e.deity]))-Number(Boolean(verifiedBaogao[a.e.deity]))||a.i-b.i);const selected=ranked[Math.min(state.todayIndex,ranked.length-1)].e,d=deities[selected.deity],baogao=verifiedBaogao[selected.deity];const remaining=ranked.filter(x=>x.e!==selected);
+ host.innerHTML=`<article class="today-card"><div><div class="today-eyebrow">今日圣诞 · ${ranked.length} 位</div><h3>${escapeHtml(d?d.name:selected.name)}</h3><div class="today-event-name">${escapeHtml(selected.name)}</div><p class="today-intro">${escapeHtml(d?d.intro:'这位神仙的资料正在整理。')}</p><div class="today-baogao"><h4>宝诰</h4>${renderBaogao(selected.deity)}</div></div><div class="today-image" aria-label="神像图片待选定">神像图片<br>待选定</div></article>${remaining.length?`<div class="today-list"><h3>今日其他圣诞</h3><div class="today-list-grid">${remaining.map(x=>`<button class="today-other" data-today-index="${ranked.indexOf(x)}">${escapeHtml(x.e.name)}<small>点击查看</small></button>`).join('')}</div><p class="today-note">首页展示顺序只为方便阅读，不代表神格高低。</p></div>`:''}${renderOtherEvents(events)}<div class="today-actions"><button id="openCalendarFromToday">浏览月历</button></div>`;
+ host.querySelectorAll('[data-today-index]').forEach(b=>b.onclick=()=>{state.todayIndex=Number(b.dataset.todayIndex);renderToday()});
+ }
+ $('#openCalendarFromToday').onclick=()=>switchView('calendar');
+}
+function renderBaogao(id){const record=verifiedBaogao[id];return record?`<p class="verified-text">${escapeHtml(record.text)}</p><small>${escapeHtml(record.title)} · <a href="${record.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(record.source)}</a></small>`:'<p>原文待核对，暂不展示。</p>'}
+function renderOtherEvents(events){const other=events.filter(e=>e.cat!=='birthday');return other.length?`<section class="today-list"><h3>今日其他纪念与斋期</h3><div class="today-list-grid">${other.map(e=>`<div class="today-other">${escapeHtml(e.name)}<small>${escapeHtml(CAT[e.cat]||'纪念日')}</small></div>`).join('')}</div></section>`:''}
+function render(){
+ $('#yearSelect').value=state.year;$('#monthSelect').value=state.month;$('#monthTitle').textContent=`${state.year} · ${String(state.month).padStart(2,'0')}`;$('#yearSubtitle').textContent=`道历 ${daoYear(state.year)} 年｜公历月视图｜${stems[(state.year-4)%10]}${branches[(state.year-4)%12]}年`;
+ const first=dateUTC(state.year,state.month,1),start=new Date(first);start.setUTCDate(1-first.getUTCDay());let html='';
+ for(let i=0;i<42;i++){const dt=new Date(start);dt.setUTCDate(start.getUTCDate()+i);const inMonth=dt.getUTCMonth()+1===state.month,events=getEvents(dt).filter(e=>state.filters.has(e.cat));const lunar=parseLunar(dt);const sel=state.selected&&dateKey(state.selected)===dateKey(dt);const today=new Date(),isToday=dt.getUTCFullYear()===today.getFullYear()&&dt.getUTCMonth()===today.getMonth()&&dt.getUTCDate()===today.getDate();
+  html+=`<button class="day ${inMonth?'':'outside'} ${sel?'selected':''} ${isToday?'today':''}" data-date="${dateKey(dt)}"><div class="day-num">${dt.getUTCDate()}</div><div class="lunar">${lunar.day===1?lunar.monthLabel:dayNames[lunar.day]}</div><div class="events">${events.slice(0,3).map(e=>`<div class="event-chip ${e.cat}" title="${escapeHtml(e.name)}">${escapeHtml(e.name)}</div>`).join('')}${events.length>3?`<div class="more">另有 ${events.length-3} 项</div>`:''}</div></button>`;
+ }
+ $('#calendarGrid').innerHTML=html;$('#calendarGrid').querySelectorAll('.day').forEach(b=>b.onclick=()=>{const [y,m,d]=b.dataset.date.split('-').map(Number);state.selected=dateUTC(y,m,d);renderDetail();document.querySelectorAll('.day.selected').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')});
+ if(!state.selected||state.selected.getUTCMonth()+1!==state.month||state.selected.getUTCFullYear()!==state.year)state.selected=dateUTC(state.year,state.month,1);renderDetail();
+}
+function renderDetail(){const dt=state.selected,l=parseLunar(dt),gz=dayGanzhi(dt),ev=getEvents(dt).filter(e=>state.filters.has(e.cat));$('#detailPanel').innerHTML=`<div class="date-hero"><div class="date-big">${String(dt.getUTCDate()).padStart(2,'0')}</div><div class="date-meta">${formatDateCN(dt)}<br>${lunarText(l)} · ${l.yearName}年<br>${monthGanzhi(dt)}月 · ${gz.text}日<br>道历 ${daoYear(dt.getUTCFullYear())} 年</div></div>${ev.length?ev.map(e=>`<article class="event-detail"><div class="cat">${CAT[e.cat]}</div><h3>${escapeHtml(e.name)}</h3><p>${escapeHtml(e.note||categoryIntro(e.cat))}</p>${e.deity?`<button class="deity-link" data-open="${e.deity}">查看神仙资料 →</button>`:''}</article>`).join(''):`<div class="empty">当前筛选条件下，这一天没有收录事件。可勾选左侧更多分类。</div>`}`;document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openDeity(b.dataset.open))}
+function search(){const q=$('#searchInput').value.trim().toLowerCase(),box=$('#searchResults');if(!q){box.classList.add('hidden');return}const rows=[];
+ for(const [id,d] of Object.entries(deities)){const hay=[d.name,d.full,...d.aliases,d.system,...d.types,...d.dates].join(' ').toLowerCase();if(hay.includes(q))rows.push({type:'deity',id,title:d.name,sub:d.full})}
+ fixed.filter(e=>e.name.toLowerCase().includes(q)).slice(0,12).forEach(e=>rows.push({type:'event',title:e.name,sub:`农历${e.m}月${dayNames[e.d]}`}));
+ box.innerHTML=rows.length?rows.slice(0,16).map((r,i)=>`<div class="search-item" data-i="${i}"><div><b>${escapeHtml(r.title)}</b><br><small>${escapeHtml(r.sub)}</small></div><small>${r.type==='deity'?'神仙':'节日'}</small></div>`).join(''):`<div class="search-item"><small>未找到匹配内容</small></div>`;box.classList.remove('hidden');box.querySelectorAll('[data-i]').forEach(el=>el.onclick=()=>{const r=rows[+el.dataset.i];if(r.type==='deity')openDeity(r.id);else{showEventAcrossYear(r.title)}box.classList.add('hidden')})}
+function showEventAcrossYear(name){const hits=[];for(let m=1;m<=12;m++){const days=new Date(Date.UTC(state.year,m,0)).getUTCDate();for(let d=1;d<=days;d++){const dt=dateUTC(state.year,m,d);if(getEvents(dt).some(e=>e.name===name))hits.push(dt)}}if(hits.length){state.month=hits[0].getUTCMonth()+1;state.selected=hits[0];switchView('calendar');render();showStatus(`${state.year}年“${name}”共找到 ${hits.length} 个日期。`)}else showStatus(`${state.year}年未找到“${name}”。`)}
+function openDeity(id){const d=deities[id];if(!d)return;$('#deityTitle').textContent=d.name;$('#deityFull').textContent=d.full;$('#deityBody').innerHTML=`<div class="tags">${[...d.aliases,...d.types].map(x=>`<span class="tag">${escapeHtml(x)}</span>`).join('')}</div><div class="profile-grid"><section class="profile-section wide"><h3>神职与文化简介</h3><p>${escapeHtml(d.intro)}</p></section><section class="profile-section"><h3>所属神系</h3><p>${escapeHtml(d.system)}</p></section><section class="profile-section"><h3>本历相关日期</h3><ul>${d.dates.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></section><section class="profile-section wide"><h3>宝诰</h3>${renderBaogao(id)}</section><section class="profile-section"><h3>经典与图像出处</h3><ul>${d.classics.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></section><section class="profile-section"><h3>主祀与重要奉祀处</h3><ul>${d.temples.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></section><section class="profile-section wide"><h3>神系关系</h3><ul>${d.relations.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></section><section class="profile-section wide"><h3>资料边界</h3><p class="source-note">神号、神职和关系在不同经典、道派与地方宫观中可能存在异文。本原型以公众科普为目的，不以单一图谱取代具体道经与科仪传统。</p></section></div>`;$('#deityModal').classList.remove('hidden')}
+function closeModal(){$('#deityModal').classList.add('hidden')}
+function showStatus(t,auto=true){const s=$('#status');s.textContent=t;s.classList.remove('hidden');if(auto)setTimeout(()=>s.classList.add('hidden'),2800)}
+function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+init();
+</script>
+</body>
+</html>
