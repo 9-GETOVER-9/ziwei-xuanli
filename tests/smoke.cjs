@@ -4,6 +4,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const catalog = fs.readFileSync(path.join(__dirname, '..', 'baogao-catalog.js'), 'utf8');
 const match = html.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(match, '页面应有脚本');
 const script = match[1].replace(/\binit\(\);\s*$/, '');
@@ -15,13 +16,14 @@ function pageOn(isoDate) {
   }
   const elements = new Map();
   const document = {
+    querySelectorAll() { return []; },
     querySelector(selector) {
       if (!elements.has(selector)) elements.set(selector, { textContent: '', innerHTML: '', classList: { toggle() {} }, querySelectorAll() { return []; } });
       return elements.get(selector);
     },
   };
   const context = vm.createContext({ Date: ClockDate, Intl, document, console });
-  vm.runInContext(script, context);
+  vm.runInContext(catalog + script, context);
   vm.runInContext('renderToday()', context);
   return { context, elements, content: elements.get('#todayContent').innerHTML };
 }
@@ -53,5 +55,20 @@ const verified = pageOn(verifiedDate);
 assert.match(verified.content, /星主宝诰/);
 assert.match(verified.content, /taoist\.org\.cn/);
 assert.doesNotMatch(verified.content, /原文待核对/);
+
+const fiscal = pageOn('2026-09-03');
+vm.runInContext('state.selected=dateUTC(2026,9,3);renderDetail()', fiscal.context);
+assert.match(fiscal.elements.get('#detailPanel').innerHTML, /财帛星君宝诰/);
+assert.match(fiscal.elements.get('#detailPanel').innerHTML, /金星下凡/);
+
+const kitchen = pageOn('2026-09-13');
+vm.runInContext('state.selected=dateUTC(2026,9,13);renderDetail()', kitchen.context);
+assert.match(kitchen.elements.get('#detailPanel').innerHTML, /九天司命宝诰/);
+
+const nine = pageOn('2026-10-12');
+vm.runInContext('state.selected=dateUTC(2026,10,12);renderDetail()', nine.context);
+assert.match(nine.elements.get('#detailPanel').innerHTML, /九皇斋第3日 · 真人禄存星君/);
+assert.match(nine.elements.get('#detailPanel').innerHTML, /北斗宝诰/);
+assert.match(nine.content, /今日神仙纪念/);
 
 console.log('smoke tests passed: empty day, multiple birthdays, sourced baogao');
