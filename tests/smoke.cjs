@@ -35,7 +35,10 @@ assert.match(multiple.content, /斗姥元君圣诞/);
 assert.match(multiple.content, /今日其他圣诞/);
 assert.match(multiple.content, /重阳帝君圣诞/);
 assert.match(multiple.content, /酆都大帝圣诞/);
-assert.match(multiple.content, /原文待核对/);
+assert.match(multiple.content, /斗姥诰/);
+assert.ok(multiple.content.indexOf('斗姥元君圣诞') < multiple.content.indexOf('重阳帝君圣诞'));
+assert.equal(vm.runInContext("birthdayRank({deity:'doumu'}) < birthdayRank({deity:'yuhuang'})", multiple.context), true);
+assert.equal(vm.runInContext("birthdayRank({deity:'laojun'}) < birthdayRank({deity:'houtu'})", multiple.context), true);
 
 let verifiedDate;
 for (let month = 1; month <= 12 && !verifiedDate; month++) {

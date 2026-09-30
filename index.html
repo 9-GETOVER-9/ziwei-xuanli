@@ -104,13 +104,13 @@ function add(m,d,name,cat='birthday',deity=null,note=''){fixed.push({m,d,name,ca
 // 正月
 add(1,1,'五腊日','wula');add(1,1,'天腊之辰','wula');add(1,3,'郝真人圣诞');add(1,3,'孙真人圣诞');add(1,5,'孙祖清静元君诞');add(1,7,'三会日','other');add(1,7,'举迁赏会','other');add(1,9,'玉皇上帝圣诞','birthday','yuhuang');add(1,13,'关圣帝君飞升','attainment');add(1,15,'三元日','sanyuan');add(1,15,'上元天官圣诞');add(1,15,'老祖天师圣诞');add(1,19,'长春邱真人（邱处机）圣诞');add(1,28,'许真君（许逊天师）圣诞');
 // 二月
-add(2,1,'勾陈天皇大帝圣诞','birthday','gouchen');add(2,1,'长春刘真人（刘渊然）圣诞');add(2,2,'土地正神诞');add(2,2,'姜太公圣诞');add(2,3,'文昌梓潼帝君圣诞');add(2,6,'东华帝君圣诞');add(2,13,'度人无量葛真君圣诞');add(2,15,'太清道德天尊（太上老君）圣诞');add(2,19,'慈航真人圣诞');
+add(2,1,'勾陈天皇大帝圣诞','birthday','gouchen');add(2,1,'长春刘真人（刘渊然）圣诞');add(2,2,'土地正神诞');add(2,2,'姜太公圣诞');add(2,3,'文昌梓潼帝君圣诞');add(2,6,'东华帝君圣诞');add(2,13,'度人无量葛真君圣诞');add(2,15,'太清道德天尊（太上老君）圣诞','birthday','laojun');add(2,19,'慈航真人圣诞');
 // 三月
-add(3,1,'谭祖（谭处端）长真真人圣诞');add(3,3,'玄天上帝圣诞','birthday','zhenwu');add(3,6,'眼光娘娘圣诞');add(3,15,'天师张大真人圣诞');add(3,15,'财神赵公元帅圣诞');add(3,16,'三茅真君得道之辰','attainment');add(3,16,'中岳大帝圣诞');add(3,18,'王祖（王处一）玉阳真人圣诞');add(3,18,'后土娘娘圣诞');add(3,19,'太阳星君圣诞');add(3,20,'子孙娘娘圣诞');add(3,23,'天后妈祖圣诞');add(3,26,'鬼谷先师诞');add(3,28,'东岳大帝圣诞');
+add(3,1,'谭祖（谭处端）长真真人圣诞');add(3,3,'玄天上帝圣诞','birthday','zhenwu');add(3,6,'眼光娘娘圣诞');add(3,15,'天师张大真人圣诞');add(3,15,'财神赵公元帅圣诞');add(3,16,'三茅真君得道之辰','attainment');add(3,16,'中岳大帝圣诞');add(3,18,'王祖（王处一）玉阳真人圣诞');add(3,18,'后土娘娘圣诞','birthday','houtu');add(3,19,'太阳星君圣诞');add(3,20,'子孙娘娘圣诞');add(3,23,'天后妈祖圣诞');add(3,26,'鬼谷先师诞');add(3,28,'东岳大帝圣诞');
 // 四月
 add(4,1,'长生谭真君成道之辰','attainment');add(4,10,'何仙姑圣诞');add(4,14,'吕祖纯阳祖师圣诞');add(4,15,'钟离祖师圣诞');add(4,18,'北极紫微大帝圣诞','birthday','ziwei');add(4,18,'泰山圣母碧霞元君诞');add(4,18,'华佗神医先师诞');add(4,20,'眼光圣母娘娘诞');add(4,28,'神农先帝诞');
 // 五月
-add(5,1,'南极长生大帝圣诞','birthday','nanji');add(5,5,'五腊日','wula');add(5,5,'地腊之辰','wula');add(5,5,'南方雷祖圣诞');add(5,5,'地祗温元帅圣诞');add(5,5,'雷霆邓天君圣诞');add(5,7,'灵宝天尊圣诞');add(5,11,'城隍爷圣诞');add(5,13,'关圣帝君降神','attainment');add(5,13,'关平太子圣诞');add(5,18,'张天师圣诞');add(5,20,'马祖丹阳真人圣诞');add(5,29,'紫青白祖师圣诞');
+add(5,1,'南极长生大帝圣诞','birthday','nanji');add(5,5,'五腊日','wula');add(5,5,'地腊之辰','wula');add(5,5,'南方雷祖圣诞');add(5,5,'地祗温元帅圣诞');add(5,5,'雷霆邓天君圣诞');add(5,7,'灵宝天尊圣诞','birthday','lingbao');add(5,11,'城隍爷圣诞');add(5,13,'关圣帝君降神','attainment');add(5,13,'关平太子圣诞');add(5,18,'张天师圣诞');add(5,20,'马祖丹阳真人圣诞');add(5,29,'紫青白祖师圣诞');
 // 六月
 for(let d=1;d<=6;d++)add(6,d,'南斗星君下降','descent');add(6,10,'刘海蟾祖师圣诞');add(6,15,'灵官王天君圣诞');add(6,19,'慈航（观音）成道日','attainment');add(6,23,'火神圣诞');add(6,24,'南极大帝中方雷祖圣诞');add(6,24,'关圣帝君圣诞');add(6,26,'二郎真君圣诞');
 // 七月
@@ -125,6 +125,9 @@ add(10,1,'五腊日','wula');add(10,1,'民岁腊之辰','wula');add(10,1,'东皇
 add(11,6,'西岳大帝圣诞');add(11,9,'湘子韩祖圣诞');add(11,11,'太乙救苦天尊圣诞');add(11,26,'北方五道圣诞');add(12,8,'五腊日','wula');add(12,8,'王侯腊之辰','wula');add(12,16,'南岳大帝圣诞');add(12,16,'福德正神诞');add(12,20,'鲁班先师圣诞');add(12,21,'天猷上帝圣诞','birthday','tianyou');add(12,22,'重阳祖师圣诞');add(12,23,'祭灶王','other');add(12,25,'玉帝巡天','descent','yuhuang');add(12,25,'天神下降','descent');add(12,29,'清静孙真君（孙不二）成道','attainment');
 
 const deities={
+laojun:{name:'太上老君',full:'太清道德天尊',aliases:['太清道德天尊'],system:'三清',types:['三清'],intro:'道教三清之一，尊号道德天尊。',dates:['农历二月十五：太上老君圣诞（按本历例）'],classics:['《太清宝诰》'],temples:[],relations:['与元始天尊、灵宝天尊同列三清']},
+lingbao:{name:'灵宝天尊',full:'上清灵宝天尊',aliases:['上清灵宝天尊'],system:'三清',types:['三清'],intro:'道教三清之一，尊居上清境。',dates:['农历五月初七：灵宝天尊圣诞（按本历例）'],classics:['《上清宝诰》'],temples:[],relations:['与元始天尊、太上老君同列三清']},
+houtu:{name:'后土皇地祇',full:'承天效法后土皇地祇',aliases:['后土娘娘'],system:'后土信仰',types:['后土'],intro:'道教尊神，宝诰称承天效法后土皇地祇。',dates:['农历三月十八：后土娘娘圣诞（按本历例）'],classics:['《后土宝诰》'],temples:[],relations:['与大地、坤元信仰相关']},
 ziwei:{name:'中天紫微北极大帝',full:'中天紫微北极太皇大帝',aliases:['紫微大帝','北极大帝','紫微北极大帝','北极太皇大帝'],system:'四御、北极与星辰神系',types:['万星之宗','北极中枢','四御'],intro:'道教高阶天帝之一，以北极、紫微垣为象征中心，统摄星辰与天曹秩序。在不同经典、科仪和时代图像中，神号与职掌表述略有差异。永乐宫《朝元图》将其列入八位核心帝后。',baogao:'“大罗天阙，紫微星宫；尊居北极之高，位正中天之上。”',baogaoSource:'《中天紫微北极太皇大帝宝诰》（节选）',classics:['《中天紫微北极太皇大帝宝诰》','《云笈七签》星斗、北极相关材料','永乐宫三清殿《朝元图》图像体系'],temples:['山西芮城永乐宫（三清殿《朝元图》）','山西介休后土庙（三清观万圣朝元彩塑）'],relations:['与勾陈大帝、南极长生大帝等同见于四御或六御体系','北极四圣常被表述为北极紫微系统的护法神将','与北斗、南斗、二十八宿共同构成星辰神系'],dates:['农历四月十八：北极紫微大帝圣诞（按本历例）']},
 doumu:{name:'斗姥元君',full:'先天斗姥紫光金尊摩利支天大圣圆明道姥天尊',aliases:['斗姆元君','斗母元君','紫光夫人','道姥天尊'],system:'北斗、星辰母神体系',types:['北斗母神','星辰神系'],intro:'斗姥元君是道教星斗信仰中的重要女神，常被尊为北斗众星之母。相关神号与形象在道教经典、科仪和民间信仰中有多种层次，科普展示应避免将不同传统简单等同。',baogao:'“西天竺国，大智光中；真空妙相法王师，无上玄元天母主。”',baogaoSource:'《斗姥元君宝诰》（节选）',classics:['《斗姥元君宝诰》','北斗本命延生、朝斗类科仪文献','永乐宫《朝元图》星斗图像体系'],temples:['北京白云观元辰殿','山西芮城永乐宫（三清殿《朝元图》）'],relations:['与北斗九皇、北斗七元信仰关系密切','在星斗神系中与紫微、北斗信仰相互关联，但并非紫微大帝的别称'],dates:['农历九月初九：斗姥元君圣诞（按本历例）']},
 gouchen:{name:'勾陈上宫天皇大帝',full:'勾陈上宫天皇大帝',aliases:['勾陈大帝','天皇大帝'],system:'四御、天极神系',types:['四御','天皇'],intro:'勾陈大帝是道教高阶天帝之一，名称取自天极附近的勾陈星官。常见职掌表述涉及辅佐天道、统御众灵及兵革等，但不同文献系统的表述不完全一致。',baogao:'已收录宝诰名称；正文需依据正式科本逐字校勘，首版暂不展示。',baogaoSource:'勾陈大帝宝诰（待校勘）',classics:['勾陈、天皇大帝相关宝诰与科仪','永乐宫三清殿《朝元图》'],temples:['山西芮城永乐宫（三清殿《朝元图》）'],relations:['与紫微大帝同列四御体系','神名源于古代星官勾陈，与北极天区象征相关'],dates:['农历二月初一：勾陈天皇大帝圣诞（按本历例）']},
@@ -142,6 +145,11 @@ biyuewu:{name:'毕月乌',full:'西方白虎七宿之毕宿星君',aliases:['毕
 const baogaoSourceUrl='https://taoist.org.cn/getDjzsById.do?id=1198';
 const baogaoSource='中国道教协会《诸真宝诰》；文字出处：清代《重刊道藏辑要·张集·太上玄门早坛功课经》';
 const verifiedBaogao={
+ doumu:{title:'斗姥诰',text:'西天竺国，大智光中。真空妙相法王师，无上玄元天母主。金光嵘处，日月潜辉；宝杵旋时，鬼神失色。显灵踪于尘世，卫圣驾于阎浮。众生有难，若称名大士，寻声来救苦。大悲大愿，大圣大慈。圣德巨光天后，摩利支天，大圣圆明道姥天尊。',source:'《历代神仙通纪》所载《斗姥诰》',url:'https://www.shidianguji.com/zh/mid-page/7555996522833084443'},
+ zhenwu:{title:'玄天上帝百字圣号',text:'混元六天，传法教主。修真悟道，济度群迷。普为众生，消除灾障。八十二化，三教祖师。大慈大悲，救苦救难。三元都总管，九天游奕使。左天罡北极右垣大将军。镇天助顺，真武灵应。福德衍庆，仁慈正烈。协运真君，沿世福神。玉虚师相，玄天上帝。金阙化身，荡魔天尊。',source:'中华道教玄天上帝弘道协会《玄天上帝宝诰》',url:'https://www.tiengod.org.tw/web/images/ckfinder/files/20140618111747.pdf'},
+ laojun:{title:'太清宝诰',text:'志心皈命礼。随方设教，历劫度人。为皇者师，帝者师，王者师，假名易号；立天之道，地之道，人之道，隐圣显凡。总千二百之官君，包万亿重之梵炁。化行今古，著道德凡五千言；主握阴阳，命雷霆用九五数。大悲大愿，大圣大慈。太上老君，道德天尊。',source:baogaoSource,url:baogaoSourceUrl},
+ lingbao:{title:'上清宝诰',text:'志心皈命礼。居上清境，号灵宝君。祖劫化生，九万九千余梵炁。赤书焕发，六百六十八真文。因混沌赤文而开九霄，纪元洞玉历而分五劫。天经地纬，巍乎造化之宗；枢阴机阳，卓尔雷霆之祖。大悲大愿，大圣大慈。玉宸道君，灵宝天尊。',source:baogaoSource,url:baogaoSourceUrl},
+ houtu:{title:'后土宝诰',text:'志心皈命礼。九华玉阙，七宝皇房。承天禀命之期，主阴执阳之柄。道推尊而含弘光大，德数蓄于柔顺利贞。效法昊天，根本育坤元之美；流形品物，生成施母道之仁。岳渎是依，山川成仗。大悲大愿，大圣大慈。承天效法，后土皇地祇。',source:baogaoSource,url:baogaoSourceUrl},
  yuhuang:{title:'弥罗宝诰',text:'志心皈命礼。太上弥罗无上天，妙有玄真境。渺渺紫金阙，太微玉清官。无极无上圣，廓落发光明。寂寂浩无宗，玄范总十方。湛寂真常道，恢漠大神通。玉皇大天尊，玄穹高上帝。',source:baogaoSource,url:baogaoSourceUrl},
  gouchen:{title:'天皇宝诰',text:'志心皈命礼。紫微宸极，勾陈天宫。九光宝苑之中，五炁玄都之上。体元皇而佐司玄化，总两极而共理三才。主持兵革之权衡，广推大德；统御星辰之躔次，毋失常经。上象巍峨，真元恢漠。大悲大愿，大圣大慈。勾陈上宫，天皇大帝。',source:baogaoSource,url:baogaoSourceUrl},
  ziwei:{title:'星主宝诰',text:'志心皈命礼。大罗天阙，紫微星宫。尊居北极之高，位正中天之上。佛号金轮炽盛，道称玉斗玄尊。璇玑玉衡齐七政，总天经地纬；日月星宿约四时，行黄道紫垣。万象宗师，诸天统御。大悲大愿，大圣大慈。万星教主，无极元皇。中天紫微，北极大帝。',source:baogaoSource,url:baogaoSourceUrl},
@@ -213,13 +221,17 @@ function moveMonth(delta){state.month+=delta;if(state.month<1){state.month=12;st
 function goToday(){const n=new Date(),y=n.getFullYear();state.year=Math.max(1900,Math.min(2100,y));state.month=n.getMonth()+1;state.selected=dateUTC(state.year,state.month,n.getDate());render()}
 function switchView(v){$('#todayView').classList.toggle('hidden-view',v!=='today');$('#calendarView').classList.toggle('hidden-view',v!=='calendar');$('.detail').classList.toggle('hidden',v!=='calendar');$('#graphView').classList.toggle('active',v==='graph');$('#todayTab').classList.toggle('active',v==='today');$('#calendarTab').classList.toggle('active',v==='calendar');$('#graphTab').classList.toggle('active',v==='graph')}
 function findNextBirthday(start){for(let offset=1;offset<=62;offset++){const dt=new Date(start);dt.setUTCDate(dt.getUTCDate()+offset);const names=getEvents(dt).filter(e=>e.cat==='birthday');if(names.length)return {date:dt,events:names}}return null}
+// 同日圣诞的阅读顺序：北斗星辰神系在前，其余采用编辑编排顺序；未列者保持原始历例顺序。
+const northernBirthdayPriority=['doumu','ziwei','gouchen','tianyou','tianpeng','yisheng','zhenwu'];
+const birthdayNamePriority=['北斗','斗姥','紫微','玄天','玉皇','太上老君','灵宝天尊','妈祖','关圣','赵公','后土','吕祖','张天师','碧霞元君','太乙救苦','文昌','城隍','土地','重阳','酆都'];
+function birthdayRank(event){const northern=northernBirthdayPriority.indexOf(event.deity);if(northern>=0)return northern;const nameIndex=birthdayNamePriority.findIndex(name=>(event.name||deities[event.deity]?.name||'').includes(name));return nameIndex<0?northernBirthdayPriority.length+birthdayNamePriority.length:northernBirthdayPriority.length+nameIndex}
 function renderToday(){
  const now=new Date(),dt=dateUTC(now.getFullYear(),now.getMonth()+1,now.getDate()),l=parseLunar(dt),events=getEvents(dt),birthdays=events.filter(e=>e.cat==='birthday');
  $('#todayTitle').textContent=formatDateCN(dt);
  $('#todayMeta').textContent=`农历${lunarText(l)} · ${l.yearName}年｜道历 ${daoYear(dt.getUTCFullYear())} 年｜${dayGanzhi(dt).text}日`;
  const host=$('#todayContent');
  if(!birthdays.length){const next=findNextBirthday(dt);host.innerHTML=`<div class="today-card"><div><div class="today-eyebrow">今日圣诞</div><h3>今日暂无收录的神仙圣诞</h3><p class="today-intro">${next?`下一次已收录圣诞：${escapeHtml(formatDateCN(next.date))} · ${escapeHtml(next.events.map(e=>e.name).join('、'))}`:'可在月历中查看其他日期的神仙圣诞。'}</p></div><div class="today-image" aria-hidden="true">紫微玄历</div></div>${renderOtherEvents(events)}<div class="today-actions"><button id="openCalendarFromToday">浏览月历</button></div>`}
- else{const ranked=birthdays.map((e,i)=>({e,i})).sort((a,b)=>Number(Boolean(verifiedBaogao[b.e.deity]))-Number(Boolean(verifiedBaogao[a.e.deity]))||a.i-b.i);const selected=ranked[Math.min(state.todayIndex,ranked.length-1)].e,d=deities[selected.deity],baogao=verifiedBaogao[selected.deity];const remaining=ranked.filter(x=>x.e!==selected);
+ else{const ranked=birthdays.map((e,i)=>({e,i})).sort((a,b)=>birthdayRank(a.e)-birthdayRank(b.e)||a.i-b.i);const selected=ranked[Math.min(state.todayIndex,ranked.length-1)].e,d=deities[selected.deity],baogao=verifiedBaogao[selected.deity];const remaining=ranked.filter(x=>x.e!==selected);
  host.innerHTML=`<article class="today-card"><div><div class="today-eyebrow">今日圣诞 · ${ranked.length} 位</div><h3>${escapeHtml(d?d.name:selected.name)}</h3><div class="today-event-name">${escapeHtml(selected.name)}</div><p class="today-intro">${escapeHtml(d?d.intro:'这位神仙的资料正在整理。')}</p><div class="today-baogao"><h4>宝诰</h4>${renderBaogao(selected.deity)}</div></div><div class="today-image" aria-label="神像图片待选定">神像图片<br>待选定</div></article>${remaining.length?`<div class="today-list"><h3>今日其他圣诞</h3><div class="today-list-grid">${remaining.map(x=>`<button class="today-other" data-today-index="${ranked.indexOf(x)}">${escapeHtml(x.e.name)}<small>点击查看</small></button>`).join('')}</div><p class="today-note">首页展示顺序只为方便阅读，不代表神格高低。</p></div>`:''}${renderOtherEvents(events)}<div class="today-actions"><button id="openCalendarFromToday">浏览月历</button></div>`;
  host.querySelectorAll('[data-today-index]').forEach(b=>b.onclick=()=>{state.todayIndex=Number(b.dataset.todayIndex);renderToday()});
  }
