@@ -44,7 +44,7 @@ assert.equal(vm.runInContext("birthdayRank({deity:'laojun'}) < birthdayRank({dei
 
 let verifiedDate;
 for (let month = 1; month <= 12 && !verifiedDate; month++) {
-  for (let day = 1; day <= 31; day++) {
+  for (let day = 1; day <= new Date(Date.UTC(2026, month, 0)).getUTCDate(); day++) {
     const iso = `2026-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const found = vm.runInContext(`getEvents(dateUTC(2026,${month},${day})).some(e=>e.deity==='ziwei'&&e.cat==='birthday')`, multiple.context);
     if (found) { verifiedDate = iso; break; }
