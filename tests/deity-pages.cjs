@@ -35,6 +35,9 @@ for (const id of ['ziwei', 'gouchen', 'nanji', 'tianpeng', 'tianyou', 'zhenwu', 
   else assert.match(rendered, /尚未找到可核对的专属宝诰/, 'Bijuewu should not receive an invented text');
 }
 const audit = JSON.parse(vm.runInContext(`JSON.stringify(fixed.filter(e => isDivineEvent(e) && baogaoRecords(e).length).map(e => ({name:e.name, titles:baogaoRecords(e).map(r=>r.title), html:renderEventBaogao(e,true)})))`, context));
+const ziweiText = vm.runInContext("renderBaogao('ziwei')", context);
+assert.match(ziweiText, /<ruby>法<rt>fǎ<\/rt><\/ruby><ruby>号/);
+assert.doesNotMatch(ziweiText, /佛号/);
 assert.equal(audit.length, 105, 'all sourced divine events should have a reading page');
 for (const event of audit) {
   assert.match(event.html, /出处：/, event.name + ' needs source');
