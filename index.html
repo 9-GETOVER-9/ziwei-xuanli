@@ -252,8 +252,8 @@ function moveMonth(delta){state.month+=delta;if(state.month<1){state.month=12;st
 function goToday(){const n=new Date(),y=n.getFullYear();state.year=Math.max(1900,Math.min(2100,y));state.month=n.getMonth()+1;state.selected=dateUTC(state.year,state.month,n.getDate());render()}
 function switchView(v){$('#todayView').classList.toggle('hidden-view',v!=='today');$('#calendarView').classList.toggle('hidden-view',v!=='calendar');$('.detail').classList.toggle('hidden',v!=='calendar');$('#graphView').classList.toggle('active',v==='graph');$('#catalogView').classList.toggle('hidden-view',v!=='catalog');for(const name of ['today','calendar','graph','catalog'])$('#'+name+'Tab').classList.toggle('active',v===name)}
 function renderCatalogIndex(){
- const events=fixed.filter(e=>isDivineEvent(e)&&baogaoRecords(e).length),host=$('#catalogContent');
- host.innerHTML=Array.from({length:12},(_,i)=>{const month=i+1,items=events.filter(e=>e.m===month),label=['','正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月','腊月'][month];return items.length?`<section class="catalog-month"><h3>农历${label}</h3><div class="catalog-grid">${items.map(e=>`<button class="catalog-card" data-reading="${escapeHtml(e.name)}"><small>${escapeHtml(dayNames[e.d]||String(e.d))} · ${escapeHtml(CAT[e.cat]||'纪念')}</small><b>${escapeHtml(e.name)}</b><span>${escapeHtml(baogaoRecords(e).map(r=>r.title).join(' · '))}</span></button>`).join('')}</div></section>`:''}).join('');
+ const events=fixed.filter(isDivineEvent),host=$('#catalogContent');
+ host.innerHTML=Array.from({length:12},(_,i)=>{const month=i+1,items=events.filter(e=>e.m===month),label=['','正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月','腊月'][month];return items.length?`<section class="catalog-month"><h3>农历${label}</h3><div class="catalog-grid">${items.map(e=>`<button class="catalog-card" data-reading="${escapeHtml(e.name)}"><small>${escapeHtml(dayNames[e.d]||String(e.d))} · ${escapeHtml(CAT[e.cat]||'纪念')}</small><b>${escapeHtml(e.name)}</b><span>${escapeHtml(baogaoRecords(e).map(r=>r.title).join(' · ')||'宝诰原文待核实')}</span></button>`).join('')}</div></section>`:''}).join('');
  host.querySelectorAll('[data-reading]').forEach(b=>b.onclick=()=>openEvent(b.dataset.reading));
 }
 function findNextBirthday(start){for(let offset=1;offset<=62;offset++){const dt=new Date(start);dt.setUTCDate(dt.getUTCDate()+offset);const names=getEvents(dt).filter(e=>e.cat==='birthday');if(names.length)return {date:dt,events:names}}return null}
@@ -270,9 +270,9 @@ function renderToday(){
  else{const ranked=birthdays.map((e,i)=>({e,i})).sort((a,b)=>birthdayRank(a.e)-birthdayRank(b.e)||a.i-b.i);const selected=ranked[Math.min(state.todayIndex,ranked.length-1)].e,d=deities[selected.deity];const remaining=ranked.filter(x=>x.e!==selected);
  host.innerHTML=`<article class="today-card"><div><div class="today-eyebrow">今日圣诞 · ${ranked.length} 位</div><h3>${escapeHtml(d?d.name:selected.name)}</h3><div class="today-event-name">${escapeHtml(selected.name)}</div><p class="today-intro">${escapeHtml(d?d.intro:'这位神仙的资料正在整理。')}</p><div class="today-baogao"><h4>宝诰</h4>${renderEventBaogao(selected)}</div></div><div class="today-image" aria-label="神像图片待选定">神像图片<br>待选定</div></article>${remaining.length?`<div class="today-list"><h3>今日其他圣诞</h3><div class="today-list-grid">${remaining.map(x=>`<button class="today-other" data-today-index="${ranked.indexOf(x)}">${escapeHtml(x.e.name)}<small>点击查看</small></button>`).join('')}</div><p class="today-note">首页展示顺序只为方便阅读，不代表神格高低。</p></div>`:''}${renderOtherEvents(events)}<div class="today-actions"><button id="openCalendarFromToday">浏览月历</button></div>`;
  host.querySelectorAll('[data-today-index]').forEach(b=>b.onclick=()=>{state.todayIndex=Number(b.dataset.todayIndex);renderToday()});
- if(host.querySelector){const art=host.querySelector('.today-image');if(d&&deityImages[selected.deity]){art.innerHTML=`<img src="assets/deities/${deityImages[selected.deity]}" alt="${escapeHtml(d.name)}的原创风格化画像">`;art.removeAttribute('aria-label')}if(baogaoRecords(selected).length){const btn=document.createElement('button');btn.className='open-reading';btn.textContent='打开图文宝诰页 →';btn.onclick=()=>openEvent(selected.name);host.querySelector('.today-baogao').after(btn)}}
+ if(host.querySelector){const art=host.querySelector('.today-image');if(eventPortrait(selected)){art.innerHTML=`<img src="assets/deities/${eventPortrait(selected)}" alt="${escapeHtml(d?d.name:selected.name)}的原创风格化画像">`;art.removeAttribute('aria-label')}if(isDivineEvent(selected)){const btn=document.createElement('button');btn.className='open-reading';btn.textContent='打开图文宝诰页 →';btn.onclick=()=>openEvent(selected.name);host.querySelector('.today-baogao').after(btn)}}
  }
- if(!birthdays.length&&host.querySelector){const featured=events.find(e=>isDivineEvent(e)&&baogaoRecords(e).length&&fixed.some(x=>x.name===e.name));if(featured){const btn=document.createElement('button');btn.className='open-reading';btn.textContent='打开图文宝诰页 →';btn.onclick=()=>openEvent(featured.name);host.querySelector('.today-baogao')?.after(btn)}}
+ if(!birthdays.length&&host.querySelector){const featured=events.find(e=>isDivineEvent(e)&&fixed.some(x=>x.name===e.name));if(featured){const art=host.querySelector('.today-image'),image=eventPortrait(featured);if(art&&image){art.innerHTML=`<img src="assets/deities/${image}" alt="${escapeHtml(featured.name)}的原创风格化画像">`;art.removeAttribute('aria-label')}const btn=document.createElement('button');btn.className='open-reading';btn.textContent='打开图文宝诰页 →';btn.onclick=()=>openEvent(featured.name);host.querySelector('.today-baogao')?.after(btn)}}
  $('#openCalendarFromToday').onclick=()=>switchView('calendar');
 }
 const deityCatalogTitles={tianpeng:['天蓬元帅宝诰'],tianyou:['天猷元帅宝诰'],yisheng:['翊圣元帅宝诰']};
@@ -346,13 +346,58 @@ function render(){
  $('#calendarGrid').innerHTML=html;$('#calendarGrid').querySelectorAll('.day').forEach(b=>b.onclick=()=>{const [y,m,d]=b.dataset.date.split('-').map(Number);state.selected=dateUTC(y,m,d);renderDetail();document.querySelectorAll('.day.selected').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')});
  if(!state.selected||state.selected.getUTCMonth()+1!==state.month||state.selected.getUTCFullYear()!==state.year)state.selected=dateUTC(state.year,state.month,1);renderDetail();
 }
-function renderDetail(){const dt=state.selected,l=parseLunar(dt),gz=dayGanzhi(dt),ev=getEvents(dt).filter(e=>state.filters.has(e.cat));$('#detailPanel').innerHTML=`<div class="date-hero"><div class="date-big">${String(dt.getUTCDate()).padStart(2,'0')}</div><div class="date-meta">${formatDateCN(dt)}<br>${lunarText(l)} · ${l.yearName}年<br>${monthGanzhi(dt)}月 · ${gz.text}日<br>道历 ${daoYear(dt.getUTCFullYear())} 年</div></div>${ev.length?ev.map(e=>`<article class="event-detail"><div class="cat">${CAT[e.cat]}</div><h3>${escapeHtml(e.name)}</h3><p>${escapeHtml(e.note||categoryIntro(e.cat))}</p>${isDivineEvent(e)?`<div class="event-baogao"><h4>相关宝诰</h4>${renderEventBaogao(e)}</div>`:''}${isDivineEvent(e)&&baogaoRecords(e).length&&fixed.some(x=>x.name===e.name)?`<button class="deity-link" data-reading="${escapeHtml(e.name)}">打开图文宝诰页 →</button>`:''}</article>`).join(''):`<div class="empty">当前筛选条件下，这一天没有收录事件。可勾选左侧更多分类。</div>`}`;document.querySelectorAll('#detailPanel [data-reading]').forEach(b=>b.onclick=()=>openEvent(b.dataset.reading))}
+function renderDetail(){const dt=state.selected,l=parseLunar(dt),gz=dayGanzhi(dt),ev=getEvents(dt).filter(e=>state.filters.has(e.cat));$('#detailPanel').innerHTML=`<div class="date-hero"><div class="date-big">${String(dt.getUTCDate()).padStart(2,'0')}</div><div class="date-meta">${formatDateCN(dt)}<br>${lunarText(l)} · ${l.yearName}年<br>${monthGanzhi(dt)}月 · ${gz.text}日<br>道历 ${daoYear(dt.getUTCFullYear())} 年</div></div>${ev.length?ev.map(e=>`<article class="event-detail"><div class="cat">${CAT[e.cat]}</div><h3>${escapeHtml(e.name)}</h3><p>${escapeHtml(e.note||categoryIntro(e.cat))}</p>${isDivineEvent(e)?`<div class="event-baogao"><h4>相关宝诰</h4>${renderEventBaogao(e)}</div>`:''}${isDivineEvent(e)&&fixed.some(x=>x.name===e.name)?`<button class="deity-link" data-reading="${escapeHtml(e.name)}">打开图文宝诰页 →</button>`:''}</article>`).join(''):`<div class="empty">当前筛选条件下，这一天没有收录事件。可勾选左侧更多分类。</div>`}`;document.querySelectorAll('#detailPanel [data-reading]').forEach(b=>b.onclick=()=>openEvent(b.dataset.reading))}
 function search(){const q=$('#searchInput').value.trim().toLowerCase(),box=$('#searchResults');if(!q){box.classList.add('hidden');return}const rows=[];
  for(const [id,d] of Object.entries(deities)){const hay=[d.name,d.full,...d.aliases,d.system,...d.types,...d.dates].join(' ').toLowerCase();if(hay.includes(q))rows.push({type:'deity',id,title:d.name,sub:d.full})}
  fixed.filter(e=>e.name.toLowerCase().includes(q)).slice(0,12).forEach(e=>rows.push({type:'event',title:e.name,sub:`农历${e.m}月${dayNames[e.d]}`}));
  box.innerHTML=rows.length?rows.slice(0,16).map((r,i)=>`<div class="search-item" data-i="${i}"><div><b>${escapeHtml(r.title)}</b><br><small>${escapeHtml(r.sub)}</small></div><small>${r.type==='deity'?'神仙':'节日'}</small></div>`).join(''):`<div class="search-item"><small>未找到匹配内容</small></div>`;box.classList.remove('hidden');box.querySelectorAll('[data-i]').forEach(el=>el.onclick=()=>{const r=rows[+el.dataset.i];if(r.type==='deity')openDeity(r.id);else{showEventAcrossYear(r.title)}box.classList.add('hidden')})}
 function showEventAcrossYear(name){const hits=[];for(let m=1;m<=12;m++){const days=new Date(Date.UTC(state.year,m,0)).getUTCDate();for(let d=1;d<=days;d++){const dt=dateUTC(state.year,m,d);if(getEvents(dt).some(e=>e.name===name))hits.push(dt)}}if(hits.length){state.month=hits[0].getUTCMonth()+1;state.selected=hits[0];switchView('calendar');render();showStatus(`${state.year}年“${name}”共找到 ${hits.length} 个日期。`)}else showStatus(`${state.year}年未找到“${name}”。`)}
 const deityImages={ziwei:'ziwei.webp',gouchen:'gouchen.webp',nanji:'nanji.webp',tianpeng:'tianpeng.webp',tianyou:'tianyou.webp',zhenwu:'zhenwu.webp',yuhuang:'yuhuang.webp',doumu:'doumu.webp',houtu:'houtu.webp',yisheng:'yisheng.webp',biyuewu:'biyuewu.webp',laojun:'laojun.webp',lingbao:'lingbao.webp',caibo:'caibo.webp',siming:'siming.webp'};
+const eventPortraits={
+ '郝真人圣诞':'haozhenren','孙真人圣诞':'sunzhenren','孙祖清静元君诞':'sunbuer',
+ '关圣帝君飞升':'guandi','上元天官圣诞':'tianguandadi','老祖天师圣诞':'zhangdaoling',
+ '长春邱真人（邱处机）圣诞':'qiuchuji','许真君（许逊天师）圣诞':'xuzhenjun',
+ '土地正神诞':'tudi','姜太公圣诞':'jiangziya','文昌梓潼帝君圣诞':'wendi',
+ '东华帝君圣诞':'donghua','度人无量葛真君圣诞':'gegen','慈航真人圣诞':'cihang',
+ '谭祖（谭处端）长真真人圣诞':'tan','眼光娘娘圣诞':'yanmu',
+ '天师张大真人圣诞':'zhangdazhenren','财神赵公元帅圣诞':'zhaogong',
+ '三茅真君得道之辰':'sanmao','中岳大帝圣诞':'zhongyue',
+ '王祖（王处一）玉阳真人圣诞':'wangchuyi','太阳星君圣诞':'taiyang',
+ '子孙娘娘圣诞':'zisun','天后妈祖圣诞':'mazu','鬼谷先师诞':'guiguzi',
+ '东岳大帝圣诞':'dongyue','长真谭祖（谭处端）成道之辰':'tan',
+ '何仙姑圣诞':'hexiangu','吕祖纯阳祖师圣诞':'lvzu','钟离祖师圣诞':'zhongli',
+ '泰山圣母碧霞元君诞':'bixia','眼光圣母娘娘诞':'yanmu',
+ '神农先帝诞':'shennong','南方雷祖圣诞':'leizu','地祗温元帅圣诞':'wenyuanshuai',
+ '雷霆邓天君圣诞':'dengtianjun','城隍爷圣诞':'chenghuang',
+ '关圣帝君降神':'guandi','关平太子圣诞':'guanping','张天师圣诞':'zhangdaoling',
+ '马祖丹阳真人圣诞':'madanyang','紫青白祖师圣诞':'baizushi',
+ '刘海蟾祖师圣诞':'liuhaichan','灵官王天君圣诞':'wanglingguan',
+ '慈航（观音）成道日':'cihang','火神圣诞':'huode',
+ '南极大帝中方雷祖圣诞':'zhongfanglei','关圣帝君圣诞':'guandi',
+ '中元地官大帝圣诞':'diguandadi','王母娘娘圣诞':'wangmu',
+ '刘祖（刘处玄）长生真人圣诞':'liuchuxuan','张三丰祖师圣诞':'zhangsanfeng',
+ '许真君飞升日':'xuzhenjun','北方雷祖圣诞':'leizu','北岳大帝诞辰':'beiyue',
+ '太阴星君诞':'taiyin','重阳帝君圣诞':'wangchongyang','酆都大帝圣诞':'fengdu',
+ '萨翁真君圣诞':'sa','五显灵官马元帅圣诞':'maparshal',
+ '三茅应化真君圣诞':'sanmao','天曹诸司五岳五帝圣诞':'wuyue',
+ '下元水官大帝圣诞':'shuiguan','地母娘娘圣诞':'dimu',
+ '长春邱真君飞升':'qiuchuji','虚靖天师（第三十代天师弘悟张真人）诞':'zhangdazhenren',
+ '西岳大帝圣诞':'xiyue','湘子韩祖圣诞':'hanxiangzi',
+ '太乙救苦天尊圣诞':'taizi','南岳大帝圣诞':'nanyue',
+ '福德正神诞':'tudi','鲁班先师圣诞':'luban','重阳祖师圣诞':'wangchongyang',
+ '祭灶王':'siming','清静孙真君（孙不二）成道':'sunbuer',
+ '南斗六司下降 · 第1日':'nandou1','南斗六司下降 · 第2日':'nandou2',
+ '南斗六司下降 · 第3日':'nandou3','南斗六司下降 · 第4日':'nandou4',
+ '南斗六司下降 · 第5日':'nandou5','南斗六司下降 · 第6日':'nandou6',
+ '九皇斋第1日 · 阳明贪狼星君':'beidou1','九皇斋第2日 · 阴精巨门星君':'beidou2',
+ '九皇斋第3日 · 真人禄存星君':'beidou3','九皇斋第4日 · 玄冥文曲星君':'beidou4',
+ '九皇斋第5日 · 丹元廉贞星君':'beidou5','九皇斋第6日 · 北极武曲星君':'beidou6',
+ '九皇斋第7日 · 天关破军星君':'beidou7','九皇斋第8日 · 洞明外辅星君':'beidou8',
+ '九皇斋第9日 · 隐光内弼星君':'beidou9',
+ '北方五道圣诞':'beifangwudao','长春刘真人（刘渊然）圣诞':'liuyuanran',
+ '华佗神医先师诞':'huatuo','二郎真君圣诞':'erlang','东皇大帝圣诞':'donghuang'
+};
+function eventPortrait(e){const key=eventPortraits[e.name];return deityImages[e.deity]||(key?`${key}.webp`:null)}
 function openDeity(id){if(!deities[id])return;location.hash='deity/'+encodeURIComponent(id);syncDeityHash()}
 function openEvent(name){if(!fixed.some(e=>e.name===name))return;location.hash='event/'+encodeURIComponent(name);syncDeityHash()}
 function closeDeityPage(){location.hash='';syncDeityHash()}
@@ -366,7 +411,7 @@ function syncDeityHash(){
  $('#deityPage').classList.remove('hidden');$('#deityPage').scrollTop=0;document.body.style.overflow='hidden';
 }
 function renderEventPage(e){
- const d=deities[e.deity],image=deityImages[e.deity],portrait=image?`<img src="assets/deities/${image}" alt="${escapeHtml(d?d.name:e.name)}的原创风格化画像"><p class="image-note">原创生成的文化插画，并非历史画像或传统定本。</p>`:`<div class="reading-art" aria-label="画像待补"><span>紫微玄历</span><b>${escapeHtml(d?d.name:e.name)}</b><small>画像资料待补</small></div>`;
+ const d=deities[e.deity],image=eventPortrait(e),portrait=image?`<img src="assets/deities/${image}" alt="${escapeHtml(d?d.name:e.name)}的原创风格化画像"><p class="image-note">原创生成的文化插画，并非历史画像或传统定本。</p>`:`<div class="reading-art" aria-label="画像待补"><span>紫微玄历</span><b>${escapeHtml(d?d.name:e.name)}</b><small>画像资料待补</small></div>`;
  const dateLabel=`农历${['','正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月','腊月'][e.m]||e.m+'月'}${dayNames[e.d]||e.d}`;
  const intro=d?d.intro:(e.note||categoryIntro(e.cat));
  $('#deityPageBody').innerHTML=`<div class="deity-page-layout"><aside class="deity-page-left">${portrait}<div class="deity-kicker">${escapeHtml(CAT[e.cat]||'神仙纪念')}</div><h2>${escapeHtml(e.name)}</h2><p>${escapeHtml(dateLabel)} · 按本项目采用的历例</p><p>${escapeHtml(intro)}</p>${d?`<button class="open-reading" data-profile="${escapeHtml(e.deity)}">阅读神仙资料 →</button>`:''}</aside><article class="deity-page-right"><div class="deity-kicker">对应文本 · BAOGAO</div><h2>${escapeHtml(e.name)}</h2>${renderEventBaogao(e,true)}<p class="source-note">页面区分专属宝诰、合诰和相关总诰。文字以各篇标注的来源为准；无核实原文的纪念日暂不补造。</p></article></div>`;

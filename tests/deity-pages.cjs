@@ -35,6 +35,12 @@ for (const id of ['ziwei', 'gouchen', 'nanji', 'tianpeng', 'tianyou', 'zhenwu', 
   else assert.match(rendered, /尚未找到可核对的专属宝诰/, 'Bijuewu should not receive an invented text');
 }
 const audit = JSON.parse(vm.runInContext(`JSON.stringify(fixed.filter(e => isDivineEvent(e) && baogaoRecords(e).length).map(e => ({name:e.name, titles:baogaoRecords(e).map(r=>r.title), html:renderEventBaogao(e,true)})))`, context));
+const portraits = JSON.parse(vm.runInContext(`JSON.stringify(fixed.filter(isDivineEvent).map(e => ({name:e.name, image:eventPortrait(e)})))`, context));
+assert.equal(portraits.length, 110);
+for (const {name, image} of portraits) {
+  assert.ok(image, name + ' needs a portrait mapping');
+  assert.ok(fs.existsSync(path.join(root, 'assets', 'deities', image)), name + ' portrait file missing');
+}
 const ziweiText = vm.runInContext("renderBaogao('ziwei')", context);
 assert.match(ziweiText, /<ruby>法<rt>fǎ<\/rt><\/ruby><ruby>号/);
 assert.doesNotMatch(ziweiText, /佛号/);
@@ -44,9 +50,15 @@ for (const event of audit) {
   assert.match(event.html, /<ruby>/, event.name + ' needs pinyin draft');
   vm.runInContext(`renderEventPage(fixed.find(e=>e.name===${JSON.stringify(event.name)}))`, context);
   assert.match(elements.get('#deityPageBody').innerHTML, /对应文本/, event.name + ' page should render');
+  assert.match(elements.get('#deityPageBody').innerHTML, /assets\/deities\/[^" ]+\.webp/, event.name + ' should render a portrait');
 }
 vm.runInContext('renderCatalogIndex()', context);
-assert.equal((elements.get('#catalogContent').innerHTML.match(/class="catalog-card"/g) || []).length, 105);
+assert.equal((elements.get('#catalogContent').innerHTML.match(/class="catalog-card"/g) || []).length, 110);
+for (const name of ['北方五道圣诞','长春刘真人（刘渊然）圣诞','华佗神医先师诞','二郎真君圣诞','东皇大帝圣诞']) {
+  vm.runInContext(`renderEventPage(fixed.find(e=>e.name===${JSON.stringify(name)}))`, context);
+  assert.match(elements.get('#deityPageBody').innerHTML, /尚未|暂未|待核/, name + ' should retain the unverified-text notice');
+  assert.match(elements.get('#deityPageBody').innerHTML, /assets\/deities\/[^" ]+\.webp/, name + ' should show a portrait');
+}
 assert.match(html, /data-deity="houtu"/, 'four ministers graph should include Houtu');
 assert.match(html, /data-event="南斗六司下降 · 第1日"/, 'graph should link South Dipper');
 console.log('deity portrait and pinyin page checks passed');
