@@ -44,6 +44,11 @@ for (const {name, image} of portraits) {
 const ziweiText = vm.runInContext("renderBaogao('ziwei')", context);
 assert.match(ziweiText, /<ruby>法<rt>fǎ<\/rt><\/ruby><ruby>号/);
 assert.doesNotMatch(ziweiText, /佛号/);
+assert.match(ziweiText, /class="baogao-line"/, 'full reading pages should show centered phrase rows');
+const sourceTexts = JSON.parse(vm.runInContext('JSON.stringify([...Object.values(sourceBaogaoCatalog),...Object.values(sourcedBaogao)].filter(r=>r?.text).map(r=>({text:r.text,ranges:baogaoLineRanges(r.text)})))', context));
+for (const {text, ranges} of sourceTexts) {
+  assert.equal(ranges.map(([start,end])=>text.slice(start,end)).join(''), text, 'line layout must preserve every character');
+}
 assert.equal(audit.length, 105, 'all sourced divine events should have a reading page');
 for (const event of audit) {
   assert.match(event.html, /出处：/, event.name + ' needs source');

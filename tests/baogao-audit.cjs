@@ -28,9 +28,11 @@ for (const title of read('Object.values(deityCatalogTitles).flat()')) {
   assert.ok(read(`sourceBaogaoCatalog[${JSON.stringify(title)}]`), title);
 }
 
-// Same objects and same chosen text are used by event cards and deity profiles.
+// Event cards and deity profiles choose the same records; their visual markup may differ.
 for (const id of ['siming', 'nandou', 'beidou', 'yuhuang', 'ziwei', 'tianyou']) {
-  assert.equal(read(`renderEventBaogao({deity:'${id}'}).includes(renderBaogao('${id}'))`), true, id);
+  const eventRecords = read(`JSON.stringify(baogaoRecords({deity:'${id}'}).map(r=>[r.title,r.text]))`);
+  const profileRecords = read(`JSON.stringify((sourcedBaogao['${id}']?[sourcedBaogao['${id}']]:(deityCatalogTitles['${id}']||[]).map(title=>sourceBaogaoCatalog[title]).filter(Boolean)).map(r=>[r.title,r.text]))`);
+  assert.equal(eventRecords, profileRecords, id);
 }
 for (const name of ['地母娘娘圣诞', '南方雷祖圣诞', '北方雷祖圣诞', '南极大帝中方雷祖圣诞']) {
   assert.match(read(`renderEventBaogao(fixed.find(e=>e.name===${JSON.stringify(name)}))`), /相关|分别展示/);
