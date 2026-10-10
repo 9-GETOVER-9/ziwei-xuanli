@@ -115,6 +115,7 @@ button{cursor:pointer}
 <div id="status" class="status hidden"></div>
 <script src="baogao-catalog.js?v=5d23b4f173a1"></script>
 <script src="baogao-pinyin.js"></script>
+<script src="deity-intros.js"></script>
 <script>
 'use strict';
 const CAT={birthday:'神仙圣诞',attainment:'成道、飞升、降生、下降',sanyuan:'三元日',wula:'五腊日',bahui:'八会日',bajie:'八节日',wuri:'明戊日、暗戊日',tianshe:'天赦日',descent:'神仙巡天、星君下降',other:'其他纪念日'};
@@ -355,7 +356,7 @@ function render(){
  $('#calendarGrid').innerHTML=html;$('#calendarGrid').querySelectorAll('.day').forEach(b=>b.onclick=()=>{const [y,m,d]=b.dataset.date.split('-').map(Number);state.selected=dateUTC(y,m,d);renderDetail();document.querySelectorAll('.day.selected').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')});
  if(!state.selected||state.selected.getUTCMonth()+1!==state.month||state.selected.getUTCFullYear()!==state.year)state.selected=dateUTC(state.year,state.month,1);renderDetail();
 }
-function renderDetail(){const dt=state.selected,l=parseLunar(dt),gz=dayGanzhi(dt),ev=getEvents(dt).filter(e=>state.filters.has(e.cat));$('#detailPanel').innerHTML=`<div class="date-hero"><div class="date-big">${String(dt.getUTCDate()).padStart(2,'0')}</div><div class="date-meta">${formatDateCN(dt)}<br>${lunarText(l)} · ${l.yearName}年<br>${monthGanzhi(dt)}月 · ${gz.text}日<br>道历 ${daoYear(dt.getUTCFullYear())} 年</div></div>${ev.length?ev.map(e=>`<article class="event-detail"><div class="cat">${CAT[e.cat]}</div><h3>${escapeHtml(e.name)}</h3><p>${escapeHtml(e.note||categoryIntro(e.cat))}</p>${isDivineEvent(e)?`<div class="event-baogao"><h4>相关宝诰</h4>${renderEventBaogao(e)}</div>`:''}${isDivineEvent(e)&&fixed.some(x=>x.name===e.name)?`<button class="deity-link" data-reading="${escapeHtml(e.name)}">打开图文宝诰页 →</button>`:''}</article>`).join(''):`<div class="empty">当前筛选条件下，这一天没有收录事件。可勾选左侧更多分类。</div>`}`;document.querySelectorAll('#detailPanel [data-reading]').forEach(b=>b.onclick=()=>openEvent(b.dataset.reading))}
+function renderDetail(){const dt=state.selected,l=parseLunar(dt),gz=dayGanzhi(dt),ev=getEvents(dt).filter(e=>state.filters.has(e.cat));$('#detailPanel').innerHTML=`<div class="date-hero"><div class="date-big">${String(dt.getUTCDate()).padStart(2,'0')}</div><div class="date-meta">${formatDateCN(dt)}<br>${lunarText(l)} · ${l.yearName}年<br>${monthGanzhi(dt)}月 · ${gz.text}日<br>道历 ${daoYear(dt.getUTCFullYear())} 年</div></div>${ev.length?ev.map(e=>`<article class="event-detail"><div class="cat">${CAT[e.cat]}</div><h3>${escapeHtml(e.name)}</h3>${eventDeityIntro(e)?`<p>${escapeHtml(eventDeityIntro(e))}</p>`:''}${e.note?`<p>${escapeHtml(e.note)}</p>`:''}${isDivineEvent(e)?`<div class="event-baogao"><h4>相关宝诰</h4>${renderEventBaogao(e)}</div>`:''}${isDivineEvent(e)&&fixed.some(x=>x.name===e.name)?`<button class="deity-link" data-reading="${escapeHtml(e.name)}">打开图文宝诰页 →</button>`:''}</article>`).join(''):`<div class="empty">当前筛选条件下，这一天没有收录事件。可勾选左侧更多分类。</div>`}`;document.querySelectorAll('#detailPanel [data-reading]').forEach(b=>b.onclick=()=>openEvent(b.dataset.reading))}
 function search(){const q=$('#searchInput').value.trim().toLowerCase(),box=$('#searchResults');if(!q){box.classList.add('hidden');return}const rows=[];
  for(const [id,d] of Object.entries(deities)){const hay=[d.name,d.full,...d.aliases,d.system,...d.types,...d.dates].join(' ').toLowerCase();if(hay.includes(q))rows.push({type:'deity',id,title:d.name,sub:d.full})}
  fixed.filter(e=>e.name.toLowerCase().includes(q)).slice(0,12).forEach(e=>rows.push({type:'event',title:e.name,sub:`农历${e.m}月${dayNames[e.d]}`}));
@@ -422,7 +423,7 @@ function syncDeityHash(){
 function renderEventPage(e){
  const d=deities[e.deity],image=eventPortrait(e),portrait=image?`<img src="assets/deities/${image}" alt="${escapeHtml(d?d.name:e.name)}的原创风格化画像"><p class="image-note">原创生成的文化插画，并非历史画像或传统定本。</p>`:`<div class="reading-art" aria-label="画像待补"><span>紫微玄历</span><b>${escapeHtml(d?d.name:e.name)}</b><small>画像资料待补</small></div>`;
  const dateLabel=`农历${['','正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月','腊月'][e.m]||e.m+'月'}${dayNames[e.d]||e.d}`;
- const intro=d?d.intro:(e.note||categoryIntro(e.cat));
+ const intro=eventDeityIntro(e)||e.note||categoryIntro(e.cat);
  $('#deityPageBody').innerHTML=`<div class="deity-page-layout"><aside class="deity-page-left">${portrait}<div class="deity-kicker">${escapeHtml(CAT[e.cat]||'神仙纪念')}</div><h2>${escapeHtml(e.name)}</h2><p>${escapeHtml(dateLabel)} · 按本项目采用的历例</p><p>${escapeHtml(intro)}</p>${d?`<button class="open-reading" data-profile="${escapeHtml(e.deity)}">阅读神仙资料 →</button>`:''}</aside><article class="deity-page-right"><div class="deity-kicker">对应文本 · BAOGAO</div><h2>${escapeHtml(e.name)}</h2>${renderEventBaogao(e,true)}<p class="source-note">页面区分专属宝诰、合诰和相关总诰。文字以各篇标注的来源为准；无核实原文的纪念日暂不补造。</p></article></div>`;
  $('#deityPageBody').querySelector('[data-profile]')?.addEventListener('click',()=>openDeity(e.deity));
  $('#deityPage').classList.remove('hidden');$('#deityPage').scrollTop=0;document.body.style.overflow='hidden';
