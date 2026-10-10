@@ -5,6 +5,7 @@ const vm = require('node:vm');
 
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const catalog = fs.readFileSync(path.join(__dirname, '..', 'baogao-catalog.js'), 'utf8');
+const intros = fs.readFileSync(path.join(__dirname, '..', 'deity-intros.js'), 'utf8');
 const match = html.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(match, '页面应有脚本');
 const script = match[1].replace(/\binit\(\);\s*$/, '');
@@ -23,7 +24,7 @@ function pageOn(isoDate) {
     },
   };
   const context = vm.createContext({ Date: ClockDate, Intl, document, console });
-  vm.runInContext(catalog + script, context);
+  vm.runInContext(catalog + intros + script, context);
   vm.runInContext('renderToday()', context);
   return { context, elements, content: elements.get('#todayContent').innerHTML };
 }
@@ -69,6 +70,8 @@ const nine = pageOn('2026-10-12');
 vm.runInContext('state.selected=dateUTC(2026,10,12);renderDetail()', nine.context);
 assert.match(nine.elements.get('#detailPanel').innerHTML, /九皇斋第3日 · 真人禄存星君/);
 assert.match(nine.elements.get('#detailPanel').innerHTML, /北斗宝诰/);
+assert.match(nine.elements.get('#detailPanel').innerHTML, /北斗九皇是道教星斗信仰/);
 assert.match(nine.content, /今日神仙纪念/);
+assert.deepEqual(Array.from(vm.runInContext('fixed.filter(e=>isDivineEvent(e)&&!eventDeityIntro(e)).map(e=>e.name)', nine.context)), [], '每个神仙纪念日都应有简介');
 
 console.log('smoke tests passed: empty day, multiple birthdays, sourced baogao');
